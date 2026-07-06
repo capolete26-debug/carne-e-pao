@@ -1,95 +1,496 @@
 <!DOCTYPE html>
-<!-- deploy fix -->
-
-  <html lang="pt-BR">
-  <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carne e Pao - Restaurante</title>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carne & Pão — Smash Burger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-  body { background: #1a1210; color: #f5efe6; }
-    header { background: #2b1d17; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c9852f; }
-  header h1 { color: #c9852f; font-size: 28px; letter-spacing: 1px; }
-    nav a { color: #f5efe6; text-decoration: none; margin-left: 25px; font-weight: 600; }
-      nav a:hover { color: #c9852f; }
-      .hero { text-align: center; padding: 80px 20px; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1544025162-d76694265947?w=1200') center/cover; }
-  .hero h2 { font-size: 42px; margin-bottom: 15px; color: #fff; }
-    .hero p { font-size: 18px; color: #eee; margin-bottom: 25px; }
-    .btn { background: #c9852f; color: #1a1210; padding: 14px 30px; border: none; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; text-decoration: none; }
-    section { padding: 60px 40px; }
-  h2.titulo { text-align: center; color: #c9852f; font-size: 32px; margin-bottom: 40px; }
-    .cardapio { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; max-width: 1000px; margin: 0 auto; }
-  .item { background: #2b1d17; padding: 25px; border-radius: 12px; border: 1px solid #4a352a; }
-  .item h3 { color: #c9852f; margin-bottom: 8px; }
-    .item p { color: #ccc; font-size: 14px; margin-bottom: 12px; }
-      .item .preco { color: #f5efe6; font-weight: bold; font-size: 18px; }
-    .sobre { max-width: 800px; margin: 0 auto; text-align: center; color: #ddd; line-height: 1.7; }
-    .contato { text-align: center; }
-  .contato p { margin: 8px 0; color: #ddd; }
-    footer { text-align: center; padding: 25px; background: #2b1d17; color: #999; font-size: 14px; }
-</style>
-  </head>
-  <body>
+    * , ::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --laranja:#C8512A; --laranja-vivo:#E06030;
+      --vinho:#7A2518; --vinho-escuro:#3E1109;
+      --creme:#F4E8D0; --creme-escuro:#DDC9A3;
+      --branco:#FDF8F0; --texto:#1E0A04;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--creme); color:var(--texto); overflow-x:hidden; }
+    body::after { content:''; position:fixed; inset:0; z-index:999; pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.045'/%3E%3C/svg%3E"); opacity:.6; }
+    /* NAV */
+    nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:0.7rem 3rem; background:var(--vinho-escuro); border-bottom:2px solid var(--laranja); }
+    .nav-logo-img { height:52px; width:52px; border-radius:50%; object-fit:cover; border:2px solid var(--laranja); }
+    .nav-brand { font-family:'Playfair Display',serif; font-weight:900; font-size:1.2rem; color:var(--creme); margin-left:.7rem; }
+    .nav-brand span { color:var(--laranja-vivo); font-style:italic; }
+    .nav-left { display:flex; align-items:center; }
+    .nav-links { list-style:none; display:flex; gap:2rem; }
+    .nav-links a { font-size:.78rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--creme-escuro); text-decoration:none; transition:color .2s; }
+    .nav-links a:hover { color:var(--laranja-vivo); }
+    .nav-wpp { background:var(--laranja); color:var(--branco); padding:.55rem 1.2rem; border-radius:2px; font-size:.78rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; transition:background .2s,transform .15s; }
+    .nav-wpp:hover { background:var(--laranja-vivo); transform:translateY(-1px); }
+    /* HERO */
+    #hero { min-height:100vh; background:var(--vinho-escuro); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; padding-top:80px; }
+    .hero-circle { position:absolute; width:min(90vw,780px); height:min(90vw,780px); border-radius:50%; background:radial-gradient(circle at center,var(--vinho) 0%,transparent 72%); top:50%; left:50%; transform:translate(-50%,-50%); }
+    #hero::before { content:''; position:absolute; inset:0; background-image:repeating-linear-gradient(180deg,transparent,transparent 56px,rgba(200,81,42,.06) 56px,rgba(200,81,42,.06) 57px); }
+    .hero-arc { position:absolute; bottom:-2px; left:0; right:0; }
+    .hero-inner { position:relative; z-index:2; text-align:center; padding:2rem 1.5rem; display:flex; flex-direction:column; align-items:center; }
+    .hero-logo { width:160px; height:160px; border-radius:50%; object-fit:cover; border:3px solid var(--laranja); margin-bottom:1.5rem; animation:fadeUp .7s ease both; }
+    .hero-badge { display:inline-block; font-size:.7rem; letter-spacing:.28em; text-transform:uppercase; color:var(--laranja-vivo); border:1px solid rgba(200,81,42,.5); padding:.45rem 1.2rem; border-radius:1px; margin-bottom:1.2rem; animation:fadeUp .7s .12s ease both; }
+    .hero-title { font-family:'Playfair Display',serif; font-size:clamp(3rem,11vw,9rem); font-weight:900; line-height:.85; color:var(--creme); letter-spacing:-.03em; animation:fadeUp .7s .2s ease both; }
+    .hero-title em { font-style:italic; color:var(--laranja-vivo); }
+    .hero-e { font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:clamp(1rem,3vw,2rem); color:var(--creme-escuro); margin:.3rem 0; animation:fadeUp .7s .28s ease both; }
+    .hero-sub { font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:clamp(.95rem,2vw,1.25rem); color:var(--creme-escuro); margin-top:1.2rem; margin-bottom:2.2rem; animation:fadeUp .7s .36s ease both; }
+    .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; animation:fadeUp .7s .44s ease both; }
+    .btn-primary { background:var(--laranja); color:var(--branco); padding:.9rem 2.2rem; border-radius:2px; font-size:.85rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; transition:background .2s,transform .15s; }
+    .btn-primary:hover { background:var(--laranja-vivo); transform:translateY(-2px); }
+    .btn-ghost { background:transparent; color:var(--creme); padding:.9rem 2.2rem; border-radius:2px; border:1.5px solid rgba(244,232,208,.3); font-size:.85rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; transition:border-color .2s,color .2s,transform .15s; }
+    .btn-ghost:hover { border-color:var(--creme); transform:translateY(-2px); }
+    /* SOBRE */
+    #sobre { background:var(--branco); padding:7rem 4rem; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
+    .sobre-label { font-size:.7rem; letter-spacing:.22em; text-transform:uppercase; color:var(--laranja); font-weight:600; margin-bottom:1rem; }
+    .sobre-titulo { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,4vw,3.5rem); font-weight:900; line-height:1.05; color:var(--vinho-escuro); margin-bottom:1.5rem; }
+    .sobre-titulo em { font-style:italic; color:var(--laranja); }
+    .sobre-texto { font-family:'Fraunces',serif; font-size:1.05rem; line-height:1.8; color:#5a3020; font-weight:300; }
+    .sobre-stats { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+    .stat { background:var(--creme); border:1px solid var(--creme-escuro); padding:2rem 1.5rem; border-radius:3px; text-align:center; }
+    .stat-num { font-family:'Playfair Display',serif; font-size:3rem; font-weight:900; color:var(--laranja); line-height:1; }
+    .stat-desc { font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color:var(--vinho); margin-top:.5rem; font-weight:500; }
+    /* FAIXA */
+    .faixa { background:var(--laranja); padding:1.2rem 0; overflow:hidden; white-space:nowrap; }
+    .faixa-inner { display:inline-flex; animation:slide 18s linear infinite; }
+    .faixa-item { font-family:'Playfair Display',serif; font-size:1rem; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--vinho-escuro); padding:0 2.5rem; }
+    @keyframes slide { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    /* CARDÁPIO */
+    #cardapio { background:var(--vinho-escuro); padding:7rem 4rem; position:relative; overflow:hidden; }
+    #cardapio::before { content:''; position:absolute; inset:0; background-image:repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(200,81,42,.04) 80px,rgba(200,81,42,.04) 81px); }
+    .section-header { text-align:center; margin-bottom:4rem; position:relative; z-index:2; }
+    .section-label { font-size:.7rem; letter-spacing:.25em; text-transform:uppercase; color:var(--laranja-vivo); font-weight:600; margin-bottom:.8rem; }
+    .section-titulo { font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,4rem); font-weight:900; color:var(--creme); line-height:1; }
+    .section-titulo em { font-style:italic; color:var(--laranja-vivo); }
+    .cardapio-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; position:relative; z-index:2; max-width:1100px; margin:0 auto; }
+    .card { background:rgba(244,232,208,.05); border:1px solid rgba(200,81,42,.25); border-radius:3px; padding:2rem; transition:background .2s,border-color .2s,transform .2s; position:relative; overflow:hidden; }
+    .card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--laranja); transform:scaleY(0); transform-origin:bottom; transition:transform .3s ease; }
+    .card:hover { background:rgba(244,232,208,.09); border-color:var(--laranja); transform:translateY(-3px); }
+    .card:hover::before { transform:scaleY(1); }
+    .card-emoji { font-size:2rem; margin-bottom:1rem; }
+    .card-nome { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--creme); margin-bottom:.6rem; }
+    .card-desc { font-size:.88rem; line-height:1.65; color:var(--creme-escuro); margin-bottom:1.2rem; }
+    .card-preco-base { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--laranja-vivo); margin-bottom:1rem; }
+    /* ADICIONAIS */
+    .adicionais { margin-bottom:1.2rem; }
+    .adicionais-titulo { font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:var(--laranja-vivo); font-weight:600; margin-bottom:.7rem; }
+    .adicional-item { display:flex; align-items:center; justify-content:space-between; padding:.35rem 0; border-bottom:1px solid rgba(200,81,42,.12); }
+    .adicional-item:last-child { border-bottom:none; }
+    .adicional-nome { font-size:.85rem; color:var(--creme-escuro); }
+    .adicional-preco { font-size:.8rem; color:var(--laranja-vivo); font-weight:600; }
+    .adicional-toggle { display:flex; align-items:center; gap:.5rem; }
+    .adicional-toggle input[type=checkbox] { accent-color:var(--laranja); width:16px; height:16px; cursor:pointer; }
+    /* REMOVÍVEIS */
+    .removiveis { margin-bottom:1.2rem; }
+    .removiveis-titulo { font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:#a88; font-weight:600; margin-bottom:.7rem; }
+    .remover-item { display:flex; align-items:center; gap:.5rem; padding:.3rem 0; }
+    .remover-item label { font-size:.85rem; color:var(--creme-escuro); cursor:pointer; display:flex; align-items:center; gap:.5rem; }
+    .remover-item input[type=checkbox]:checked + span { text-decoration:line-through; opacity:.5; }
+    .btn-pedir { width:100%; background:var(--laranja); color:var(--branco); padding:.85rem; border:none; border-radius:2px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; transition:background .2s,transform .15s; display:flex; align-items:center; justify-content:center; gap:.5rem; }
+    .btn-pedir:hover { background:var(--laranja-vivo); transform:translateY(-1px); }
+    .btn-pedir svg { width:18px; height:18px; fill:white; }
+    /* CONTATO */
+    #contato { background:var(--branco); padding:7rem 4rem; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; }
+    .contato-titulo { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3rem); font-weight:900; color:var(--vinho-escuro); line-height:1.05; margin-bottom:2rem; }
+    .contato-titulo em { font-style:italic; color:var(--laranja); }
+    .info-item { display:flex; gap:1rem; align-items:flex-start; margin-bottom:1.8rem; }
+    .info-icon { width:42px; height:42px; border-radius:2px; background:var(--creme); border:1px solid var(--creme-escuro); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+    .info-label { font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; color:var(--laranja); font-weight:600; margin-bottom:.3rem; }
+    .info-valor { font-family:'Fraunces',serif; font-size:1rem; color:var(--vinho-escuro); font-weight:300; line-height:1.5; }
+    .wpp-card { background:var(--vinho-escuro); border-radius:3px; padding:2.5rem; display:flex; flex-direction:column; gap:1.5rem; }
+    .wpp-titulo { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--creme); line-height:1.1; }
+    .wpp-titulo em { font-style:italic; color:var(--laranja-vivo); }
+    .wpp-desc { font-size:.9rem; color:var(--creme-escuro); line-height:1.6; }
+    .btn-wpp { display:inline-flex; align-items:center; gap:.7rem; background:#25D366; color:#fff; padding:1rem 1.8rem; border-radius:2px; font-size:.88rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; text-decoration:none; transition:filter .2s,transform .15s; width:fit-content; }
+    .btn-wpp:hover { filter:brightness(1.1); transform:translateY(-2px); }
+    .btn-wpp svg { width:20px; height:20px; fill:white; }
+    /* FOOTER */
+    footer { background:var(--vinho-escuro); border-top:2px solid var(--laranja); padding:2.5rem 4rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+    .footer-logo { display:flex; align-items:center; gap:.7rem; }
+    .footer-logo-img { width:38px; height:38px; border-radius:50%; object-fit:cover; border:1.5px solid var(--laranja); }
+    .footer-logo-text { font-family:'Playfair Display',serif; font-weight:900; font-size:1rem; color:var(--creme); }
+    .footer-logo-text span { font-style:italic; color:var(--laranja-vivo); }
+    .footer-copy { font-size:.75rem; color:var(--creme-escuro); letter-spacing:.06em; }
+    /* ANIMAÇÕES */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    .reveal { opacity:0; transform:translateY(30px); transition:opacity .7s ease,transform .7s ease; }
+    .reveal.visible { opacity:1; transform:none; }
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      nav { padding:1rem 1.5rem; }
+      .nav-links { display:none; }
+      #sobre,#contato { grid-template-columns:1fr; gap:3rem; padding:5rem 1.5rem; }
+      #cardapio { padding:5rem 1.5rem; }
+      .sobre-stats { grid-template-columns:1fr 1fr; }
+      footer { padding:2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <img class="nav-logo-img" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAkACQAAD/4QECRXhpZgAATU0AKgAAAAgABwEOAAIAAAALAAAAYgESAAMAAAABAAEAAAEaAAUAAAABAAAAbgEbAAUAAAABAAAAdgEoAAMAAAABAAIAAAEyAAIAAAAUAAAAfodpAAQAAAABAAAAkgAAAABTY3JlZW5zaG90AAAAAACQAAAAAQAAAJAAAAABMjAyNjowMzozMCAyMTo1MzozMwAABZADAAIAAAAUAAAA1JKGAAcAAAASAAAA6KABAAMAAAAB//8AAKACAAQAAAABAAAEkqADAAQAAAABAAADegAAAAAyMDI2OjAzOjMwIDIxOjUzOjMzAEFTQ0lJAAAAU2NyZWVuc2hvdP/tAG5QaG90b3Nob3AgMy4wADhCSU0EBAAAAAAANhwBWgADGyVHHAIAAAIAAhwCeAAKU2NyZWVuc2hvdBwCPAAGMjE1MzMzHAI3AAgyMDI2MDMzMDhCSU0EJQAAAAAAEAbucVgPQ8RhQCjce6wDKuL/4gIoSUNDX1BST0ZJTEUAAQEAAAIYYXBwbAQAAABtbnRyUkdCIFhZWiAH5gABAAEAAAAAAABhY3NwQVBQTAAAAABBUFBMAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWFwcGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApkZXNjAAAA/AAAADBjcHJ0AAABLAAAAFB3dHB0AAABfAAAABRyWFlaAAABkAAAABRnWFlaAAABpAAAABRiWFlaAAABuAAAABRyVFJDAAABzAAAACBjaGFkAAAB7AAAACxiVFJDAAABzAAAACBnVFJDAAABzAAAACBtbHVjAAAAAAAAAAEAAAAMZW5VUwAAABQAAAAcAEQAaQBzAHAAbABhAHkAIABQADNtbHVjAAAAAAAAAAEAAAAMZW5VUwAAADQAAAAcAEMAbwBwAHkAcgBpAGcAaAB0ACAAQQBwAHAAbABlACAASQBuAGMALgAsACAAMgAwADIAMlhZWiAAAAAAAAD21QABAAAAANMsWFlaIAAAAAAAAIPfAAA9v////7tYWVogAAAAAAAASr8AALE3AAAKuVhZWiAAAAAAAAAoOAAAEQsAAMi5cGFyYQAAAAAAAwAAAAJmZgAA8qcAAA1ZAAAT0AAACltzZjMyAAAAAAABDEIAAAXe///zJgAAB5MAAP2Q///7ov///aMAAAPcAADAbv/AABEIA3oEkgMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2wBDAAICAgICAgMCAgMFAwMDBQYFBQUFBggGBgYGBggKCAgICAgICgoKCgoKCgoMDAwMDAwODg4ODg8PDw8PDw8PDw//2wBDAQIDAwQEBAcEBAcQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/3QAEAEr/2gAMAwEAAhEDEQA/AOXooor+dz+8AooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//Q5eiiiv53P7wCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//R5eiiiv53P7wCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//S5eiiiv53P7wCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//T5eiiiv53P7wCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//U5eiiiv53P7wCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//1eXooor+dz+8AooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//1uXooor+dz+8AooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//1+Xooor+dz+8AooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//0OXooor+dz+8AooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//9Hl6KKK/nc/vAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//9Ll6KKK/nc/vAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//9Ll6KKK/nc/vAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//9Ll6KKK/nc/vAKKKKAf/ZeAA=" alt="Carne e Pão"/>
 
-<header>
-  <h1>Carne e Pao</h1>
-  <nav>
-    <a href="#cardapio">Cardapio</a>
-    <a href="#sobre">Sobre</a>
-    <a href="#contato">Contato</a>
-  </nav>
-</header>
-
-<div class="hero">
-  <h2>Sabor de verdade, do jeito que voce gosta</h2>
-    <p>Lanches artesanais feitos com carne selecionada e pao fresquinho todos os dias</p>
-    <a href="#cardapio" class="btn">Ver Cardapio</a>
+    <div class="nav-brand">Carne <span>&amp;</span> Pão</div>
   </div>
-  <section id="cardapio">
-    <h2 class="titulo">Nosso Cardapio</h2>
-    <div class="cardapio">
-      <div class="item">
-        <h3>Classico</h3>
-      <p>Pao brioche, hamburguer 180g, queijo, alface, tomate e molho da casa</p>
-      <div class="preco">R$ 24,90</div>
-    </div>
-    <div class="item">
-      <h3>Bacon Especial</h3>
-      <p>Pao brioche, hamburguer 180g, cheddar, bacon crocante e cebola caramelizada</p>
-      <div class="preco">R$ 29,90</div>
-    </div>
-    <div class="item">
-      <h3>Duplo Carne e Pao</h3>
-      <p>Pao australiano, dois hamburgueres 150g, queijo prato e molho especial</p>
-      <div class="preco">R$ 34,90</div>
-    </div>
-    <div class="item">
-      <h3>Costela Desfiada</h3>
-      <p>Pao brioche, costela desfiada, queijo coalho e vinagrete</p>
-      <div class="preco">R$ 32,90</div>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#cardapio">Cardápio</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <a class="nav-wpp" href="https://wa.me/5511940609596" target="_blank">Pedir agora</a>
+</nav>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-circle"></div>
+  <div class="hero-inner">
+    <img class="hero-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAkACQAAD/4QECRXhpZgAATU0AKgAAAAgABwEOAAIAAAALAAAAYgESAAMAAAABAAEAAAEaAAUAAAABAAAAbgEbAAUAAAABAAAAdgEoAAMAAAABAAIAAAEyAAIAAAAUAAAAfodpAAQAAAABAAAAkgAAAABTY3JlZW5zaG90AAAAAACQAAAAAQAAAJAAAAABMjAyNjowMzozMCAyMTo1MzozMwAABZADAAIAAAAUAAAA1JKGAAcAAAASAAAA6KABAAMAAAAB//8AAKACAAQAAAABAAAEkqADAAQAAAABAAADegAAAAAyMDI2OjAzOjMwIDIxOjUzOjMzAEFTQ0lJAAAAU2NyZWVuc2hvdP/tAG5QaG90b3Nob3AgMy4wADhCSU0EBAAAAAAANhwBWgADGyVHHAIAAAIAAhwCeAAKU2NyZWVuc2hvdBwCPAAGMjE1MzMzHAI3AAgyMDI2MDMzMDhCSU0EJQAAAAAAEAbucVgPQ8RhQCjce6wDKuL/4gIoSUNDX1BST0ZJTEUAAQEAAAIYYXBwbAQAAABtbnRyUkdCIFhZWiAH5gABAAEAAAAAAABhY3NwQVBQTAAAAABBUFBMAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWFwcGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApkZXNjAAAA/AAAADBjcHJ0AAABLAAAAFB3dHB0AAABfAAAABRyWFlaAAABkAAAABRnWFlaAAABpAAAABRiWFlaAAABuAAAABRyVFJDAAABzAAAACBjaGFkAAAB7AAAACxiVFJDAAABzAAAACBnVFJDAAABzAAAACBtbHVjAAAAAAAAAAEAAAAMZW5VUwAAABQAAAAcAEQAaQBzAHAAbABhAHkAIABQADNtbHVjAAAAAAAAAAEAAAAMZW5VUwAAADQAAAAcAEMAbwBwAHkAcgBpAGcAaAB0ACAAQQBwAHAAbABlACAASQBuAGMALgAsACAAMgAwADIAMlhZWiAAAAAAAAD21QABAAAAANMsWFlaIAAAAAAAAIPfAAA9v////7tYWVogAAAAAAAASr8AALE3AAAKuVhZWiAAAAAAAAAoOAAAEQsAAMi5cGFyYQAAAAAAAwAAAAJmZgAA8qcAAA1ZAAAT0AAACltzZjMyAAAAAAABDEIAAAXe///zJgAAB5MAAP2Q///7ov///aMAAAPcAADAbv/AABEIA3oEkgMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2wBDAAICAgICAgMCAgMFAwMDBQYFBQUFBggGBgYGBggKCAgICAgICgoKCgoKCgoMDAwMDAwODg4ODg8PDw8PDw8PDw//2wBDAQIDAwQEBAcEBAcQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/3QAEAEr/2gAMAwEAAhEDEQA/AOXooor+dz+8AooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//9k=" alt="Carne e Pão"/>
+    <span class="hero-badge">✦ Smash Burger Artesanal ✦</span>
+    <div class="hero-title">CARNE</div>
+    <div class="hero-e">&amp;</div>
+    <div class="hero-title"><em>Pão</em></div>
+    <p class="hero-sub">Esmagado na chapa. Feito com respeito.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="#cardapio">Ver cardápio</a>
+      <a class="btn-ghost" href="#contato">Fale com a gente</a>
     </div>
   </div>
+  <svg class="hero-arc" viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;height:60px">
+    <path d="M0,60 Q720,0 1440,60 L1440,60 L0,60 Z" fill="#FDF8F0"/>
+  </svg>
 </section>
+<!-- SOBRE -->
 <section id="sobre">
-  <h2 class="titulo">Sobre Nos</h2>
-  <div class="sobre">
-    <p>O Carne e Pao nasceu da paixao por bons lanches e ingredientes de qualidade. Cada hamburguer e montado na hora, com pao fresco e carne selecionada, para garantir uma experiencia unica a cada mordida.</p>
+  <div class="reveal">
+    <div class="sobre-label">Nossa história</div>
+    <h2 class="sobre-titulo">Simples assim:<br><em>carne boa<br>e pão de verdade.</em></h2>
+    <p class="sobre-texto">O smash burger nasceu na chapa quente e no amor por sabor honesto. Aqui a gente não complica: carne fresca esmagada no ponto certo, queijo derretido do jeito que tem que ser, e pão que sustenta tudo sem pedir licença. Sem frescura. Só sabor.</p>
+  </div>
+  <div class="sobre-stats reveal">
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-desc">Carne fresca</div></div>
+    <div class="stat"><div class="stat-num">🔥</div><div class="stat-desc">Chapa na brasa</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-desc">Congelados</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-desc">Sabor garantido</div></div>
   </div>
 </section>
-
+<!-- FAIXA -->
+<div class="faixa" aria-hidden="true">
+  <div class="faixa-inner">
+    <span class="faixa-item">Smash Burger ✦</span><span class="faixa-item">Carne Fresca ✦</span><span class="faixa-item">Chapa Quente ✦</span><span class="faixa-item">Feito na Hora ✦</span><span class="faixa-item">Carne e Pão ✦</span>
+    <span class="faixa-item">Smash Burger ✦</span><span class="faixa-item">Carne Fresca ✦</span><span class="faixa-item">Chapa Quente ✦</span><span class="faixa-item">Feito na Hora ✦</span><span class="faixa-item">Carne e Pão ✦</span>
+  </div>
+</div>
+<!-- CARDÁPIO -->
+<section id="cardapio">
+  <div class="section-header">
+    <div class="section-label">O que a gente faz</div>
+    <h2 class="section-titulo">O <em>Cardápio</em></h2>
+  </div>
+  <div class="cardapio-grid" id="cardapio-grid">
+    <!-- Cards gerados via JS -->
+  </div>
+</section>
+<!-- CONTATO -->
 <section id="contato">
-  <h2 class="titulo">Contato</h2>
-  <div class="contato">
-    <p>Endereco: Rua Exemplo, 123 - Centro</p>
-    <p>Telefone: (11) 99999-9999</p>
-    <p>Horario: Terca a Domingo, 18h as 23h</p>
+  <div class="reveal">
+    <div class="section-label" style="color:var(--laranja);margin-bottom:.8rem;">Onde a gente tá</div>
+    <h2 class="contato-titulo">Vem comer<br>ou <em>pede pelo zap</em></h2>
+    <div class="info-item">
+      <div class="info-icon">📍</div>
+      <div><div class="info-label">Endereço</div><div class="info-valor">Rua das Hamburguerias, 42<br>São Paulo — SP</div></div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon">🕐</div>
+      <div><div class="info-label">Horário</div><div class="info-valor">Terça a domingo<br>18h às 23h</div></div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon">📞</div>
+      <div><div class="info-label">WhatsApp</div><div class="info-valor">(11) 94060-9596</div></div>
+    </div>
+  </div>
+  <div class="wpp-card reveal">
+    <div class="wpp-titulo">Bate um papo<br><em>ou manda o pedido</em></div>
+    <p class="wpp-desc">Prefere pedir direto? Manda uma mensagem no WhatsApp que a gente responde rapidinho.</p>
+    <a class="btn-wpp" href="https://wa.me/5511940609596" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Chamar no WhatsApp
+    </a>
   </div>
 </section>
-
+<!-- FOOTER -->
 <footer>
-  <p>&copy; 2026 Carne e Pao. Todos os direitos reservados.</p>
+  <div class="footer-logo">
+    <img class="footer-logo-img" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAkACQAAD/4QECRXhpZgAATU0AKgAAAAgABwEOAAIAAAALAAAAYgESAAMAAAABAAEAAAEaAAUAAAABAAAAbgEbAAUAAAABAAAAdgEoAAMAAAABAAIAAAEyAAIAAAAUAAAAfodpAAQAAAABAAAAkgAAAABTY3JlZW5zaG90AAAAAACQAAAAAQAAAJAAAAABMjAyNjowMzozMCAyMTo1MzozMwAABZADAAIAAAAUAAAA1JKGAAcAAAASAAAA6KABAAMAAAAB//8AAKACAAQAAAABAAAEkqADAAQAAAABAAADegAAAAAyMDI2OjAzOjMwIDIxOjUzOjMzAEFTQ0lJAAAAU2NyZWVuc2hvdP/tAG5QaG90b3Nob3AgMy4wADhCSU0EBAAAAAAANhwBWgADGyVHHAIAAAIAAhwCeAAKU2NyZWVuc2hvdBwCPAAGMjE1MzMzHAI3AAgyMDI2MDMzMDhCSU0EJQAAAAAAEAbucVgPQ8RhQCjce6wDKuL/4gIoSUNDX1BST0ZJTEUAAQEAAAIYYXBwbAQAAABtbnRyUkdCIFhZWiAH5gABAAEAAAAAAABhY3NwQVBQTAAAAABBUFBMAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWFwcGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApkZXNjAAAA/AAAADBjcHJ0AAABLAAAAFB3dHB0AAABfAAAABRyWFlaAAABkAAAABRnWFlaAAABpAAAABRiWFlaAAABuAAAABRyVFJDAAABzAAAACBjaGFkAAAB7AAAACxiVFJDAAABzAAAACBnVFJDAAABzAAAACBtbHVjAAAAAAAAAAEAAAAMZW5VUwAAABQAAAAcAEQAaQBzAHAAbABhAHkAIABQADNtbHVjAAAAAAAAAAEAAAAMZW5VUwAAADQAAAAcAEMAbwBwAHkAcgBpAGcAaAB0ACAAQQBwAHAAbABlACAASQBuAGMALgAsACAAMgAwADIAMlhZWiAAAAAAAAD21QABAAAAANMsWFlaIAAAAAAAAIPfAAA9v////7tYWVogAAAAAAAASr8AALE3AAAKuVhZWiAAAAAAAAAoOAAAEQsAAMi5cGFyYQAAAAAAAwAAAAJmZgAA8qcAAA1ZAAAT0AAACltzZjMyAAAAAAABDEIAAAXe///zJgAAB5MAAP2Q///7ov///aMAAAPcAADAbv/AABEIA3oEkgMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2wBDAAICAgICAgMCAgMFAwMDBQYFBQUFBggGBgYGBggKCAgICAgICgoKCgoKCgoMDAwMDAwODg4ODg8PDw8PDw8PDw//2wBDAQIDAwQEBAcEBAcQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/3QAEAEr/2gAMAwEAAhEDEQA/AOXooor+dz+8AooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopcmjJoA//9k=" alt="Logo"/>
+    <div class="footer-logo-text">Carne <span>&amp; Pão</span></div>
+  </div>
+  <div class="footer-copy">© 2025 Carne &amp; Pão · Smash Burger Artesanal · São Paulo</div>
 </footer>
+<script>
+const WPP = '5511940609596';
+// ── CARDÁPIO ──────────────────────────────────────
+const CARDAPIO = [
+  {
+    emoji:'🔥', nome:'O Clássico', preco:28,
+    desc:'Smash duplo, queijo americano derretido, alface crocante, tomate, picles e molho da casa.',
+    tag:'Mais pedido',
+    adicionais:[
+      {nome:'Bacon crocante',preco:2.50},
+      {nome:'Queijo extra',preco:2.00},
+      {nome:'Carne extra',preco:5.00},
+    ],
+    removiveis:['Alface','Tomate','Picles']
+  },
+  {
+    emoji:'🧀', nome:'O Cheesemaster', preco:34,
+    desc:'Smash duplo, quatro fatias de queijo americano, cebola caramelizada e maionese defumada.',
+    tag:'Queijeiro',
+    adicionais:[
+      {nome:'Bacon crocante',preco:2.50},
+      {nome:'Queijo extra',preco:2.00},
+      {nome:'Carne extra',preco:5.00},
+    ],
+    removiveis:['Cebola caramelizada','Maionese defumada']
+  },
+  {
+    emoji:'🌶️', nome:'O Atrevido', preco:32,
+    desc:'Smash duplo, jalapeños frescos, queijo pepper jack, cebola roxa e molho sriracha.',
+    tag:'Apimentado',
+    adicionais:[
+      {nome:'Bacon crocante',preco:2.50},
+      {nome:'Queijo extra',preco:2.00},
+      {nome:'Carne extra',preco:5.00},
+      {nome:'Alface e tomate',preco:2.50},
+    ],
+    removiveis:['Jalapeños','Cebola roxa','Sriracha']
+  },
+  {
+    emoji:'🥓', nome:'O Porco Rico', preco:36,
+    desc:'Smash simples, bacon crocante em dobro, queijo cheddar, alface e molho barbecue.',
+    tag:'Especial',
+    adicionais:[
+      {nome:'Bacon crocante',preco:2.50},
+      {nome:'Queijo extra',preco:2.00},
+      {nome:'Carne extra',preco:5.00},
+      {nome:'Alface e tomate',preco:2.50},
+    ],
+    removiveis:['Alface','Barbecue']
+  },
+  {
+    emoji:'🥬', nome:'O Honesto', preco:24,
+    desc:'Smash simples, queijo americano, tomate, alface, picles e mostarda. Direto ao ponto.',
+    tag:'Direto ao ponto',
+    adicionais:[
+      {nome:'Bacon crocante',preco:2.50},
+      {nome:'Queijo extra',preco:2.00},
+      {nome:'Carne extra',preco:5.00},
+      {nome:'Alface e tomate',preco:2.50},
+    ],
+    removiveis:['Alface','Tomate','Picles','Mostarda']
+  },
+  {
+    emoji:'🍟', nome:'Batata & Molho', preco:14,
+    desc:'Batata frita palito crocante com molho da casa. A companheira perfeita.',
+    tag:'Acompanhamento',
+    adicionais:[
+      {nome:'Porção dupla',preco:8.00},
+      {nome:'Molho extra',preco:2.00},
+    ],
+    removiveis:['Molho da casa']
+  },
+];
 
+// ── RENDER CARDS ──────────────────────────────────
+function renderCards() {
+  const grid = document.getElementById('cardapio-grid');
+  grid.innerHTML = '';
+  CARDAPIO.forEach((item, idx) => {
+    const addIds   = item.adicionais.map((_,i) => `add-${idx}-${i}`);
+    const remIds   = item.removiveis.map((_,i) => `rem-${idx}-${i}`);
+    const addsHTML = item.adicionais.map((a,i) => `
+      <div class="adicional-item">
+        <div class="adicional-toggle">
+          <input type="checkbox" id="${addIds[i]}" data-idx="${idx}" onchange="atualizaPreco(${idx})">
+          <label for="${addIds[i]}" class="adicional-nome">${a.nome}</label>
+        </div>
+        <span class="adicional-preco">+R$ ${a.preco.toFixed(2).replace('.',',')}</span>
+      </div>`).join('');
+    const remsHTML = item.removiveis.map((r,i) => `
+      <div class="remover-item">
+        <label for="${remIds[i]}">
+          <input type="checkbox" id="${remIds[i]}" data-idx="${idx}">
+          <span>${r}</span>
+        </label>
+        <span style="font-size:.72rem;color:#a88;margin-left:auto">tirar</span>
+      </div>`).join('');
+    const card = document.createElement('div');
+    card.className = 'card reveal';
+    card.innerHTML = `
+      <div class="card-emoji">${item.emoji}</div>
+      <div class="card-nome">${item.nome}</div>
+      <p class="card-desc">${item.desc}</p>
+      <div class="card-preco-base" id="preco-${idx}">R$ ${item.preco.toFixed(2).replace('.',',')}</div>
+      <div class="adicionais">
+        <div class="adicionais-titulo">✦ Adicionais</div>
+        ${addsHTML}
+      </div>
+      <div class="removiveis">
+        <div class="removiveis-titulo">✕ Remover ingrediente</div>
+        ${remsHTML}
+      </div>
+      <button class="btn-pedir" onclick="fazerPedido(${idx})">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Pedir este lanche
+      </button>`;
+    grid.appendChild(card);
+  });
+  observeReveal();
+}
+// ── ATUALIZA PREÇO ────────────────────────────────
+function atualizaPreco(idx) {
+  const item = CARDAPIO[idx];
+  let total = item.preco;
+  item.adicionais.forEach((a,i) => {
+    const cb = document.getElementById(`add-${idx}-${i}`);
+    if (cb && cb.checked) total += a.preco;
+  });
+  const el = document.getElementById(`preco-${idx}`);
+  if (el) el.textContent = 'R$ ' + total.toFixed(2).replace('.',',');
+}
+// ── MODAL DE ENTREGA ──────────────────────────────
+function fazerPedido(idx) {
+  const item = CARDAPIO[idx];
+  // coleta adicionais marcados
+  const addsEsc = [];
+  item.adicionais.forEach((a,i) => {
+    const cb = document.getElementById(`add-${idx}-${i}`);
+    if (cb && cb.checked) addsEsc.push(a.nome);
+  });
+  // coleta remoções marcadas
+  const remsEsc = [];
+  item.removiveis.forEach((r,i) => {
+    const cb = document.getElementById(`rem-${idx}-${i}`);
+    if (cb && cb.checked) remsEsc.push(r);
+  });
+  let total = item.preco;
+  item.adicionais.forEach((a,i) => {
+    const cb = document.getElementById(`add-${idx}-${i}`);
+    if (cb && cb.checked) total += a.preco;
+  });
+  showModal(idx, item, addsEsc, remsEsc, total);
+}
+// ── MODAL ─────────────────────────────────────────
+function showModal(idx, item, adds, rems, total) {
+  // remove modal anterior se existir
+  const old = document.getElementById('modal-overlay');
+  if (old) old.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
+  overlay.style.cssText = `position:fixed;inset:0;background:rgba(30,10,4,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;`;
+  overlay.innerHTML = `
+    <div style="background:var(--branco);border-radius:4px;max-width:480px;width:100%;padding:2rem;position:relative;max-height:90vh;overflow-y:auto;">
+      <button onclick="document.getElementById('modal-overlay').remove()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--vinho-escuro);">✕</button>
+      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--vinho-escuro);margin-bottom:.3rem;">${item.emoji} ${item.nome}</div>
+      ${adds.length ? `<div style="font-size:.85rem;color:var(--laranja);margin-bottom:.2rem;"><strong>Adicionais:</strong> ${adds.join(', ')}</div>` : ''}
+      ${rems.length ? `<div style="font-size:.85rem;color:#a33;margin-bottom:.6rem;"><strong>Sem:</strong> ${rems.join(', ')}</div>` : ''}
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--laranja-vivo);margin-bottom:1.5rem;">Total: R$ ${total.toFixed(2).replace('.',',')}</div>
+      <div style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--laranja);font-weight:600;margin-bottom:.8rem;">Tipo de entrega</div>
+      <div style="display:flex;gap:1rem;margin-bottom:1.5rem;">
+        <label style="flex:1;cursor:pointer;">
+          <input type="radio" name="entrega" value="delivery" checked onchange="toggleEntrega()" style="display:none">
+          <div class="entrega-opt" id="opt-delivery" style="border:2px solid var(--laranja);border-radius:3px;padding:.8rem;text-align:center;background:rgba(200,81,42,.1);">
+            <div style="font-size:1.3rem">🛵</div>
+            <div style="font-size:.82rem;font-weight:600;color:var(--vinho-escuro)">Delivery</div>
+          </div>
+        </label>
+        <label style="flex:1;cursor:pointer;">
+          <input type="radio" name="entrega" value="retirada" onchange="toggleEntrega()" style="display:none">
+          <div class="entrega-opt" id="opt-retirada" style="border:2px solid var(--creme-escuro);border-radius:3px;padding:.8rem;text-align:center;">
+            <div style="font-size:1.3rem">🏃</div>
+            <div style="font-size:.82rem;font-weight:600;color:var(--vinho-escuro)">Retirada</div>
+          </div>
+        </label>
+      </div>
+      <div id="campos-delivery">
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--laranja);font-weight:600;display:block;margin-bottom:.4rem">CEP</label>
+          <input id="campo-cep" type="text" placeholder="00000-000" maxlength="9" oninput="formataCep(this)" style="width:100%;padding:.7rem;border:1.5px solid var(--creme-escuro);border-radius:2px;font-size:.95rem;font-family:'DM Sans',sans-serif;background:var(--branco);">
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--laranja);font-weight:600;display:block;margin-bottom:.4rem">Endereço</label>
+          <input id="campo-end" type="text" placeholder="Rua, Avenida..." style="width:100%;padding:.7rem;border:1.5px solid var(--creme-escuro);border-radius:2px;font-size:.95rem;font-family:'DM Sans',sans-serif;background:var(--branco);">
+        </div>
+        <div style="margin-bottom:1.5rem;">
+          <label style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--laranja);font-weight:600;display:block;margin-bottom:.4rem">Número / Complemento</label>
+          <input id="campo-num" type="text" placeholder="Número, apto, bloco..." style="width:100%;padding:.7rem;border:1.5px solid var(--creme-escuro);border-radius:2px;font-size:.95rem;font-family:'DM Sans',sans-serif;background:var(--branco);">
+        </div>
+      </div>
+      <div id="msg-retirada" style="display:none;background:var(--creme);border-radius:3px;padding:1rem;margin-bottom:1.5rem;font-size:.9rem;color:var(--vinho-escuro);">
+        📍 <strong>Retirada no local:</strong><br>Rua das Hamburguerias, 42 — São Paulo, SP<br>Horário: Terça a domingo, 18h às 23h
+      </div>
+      <button onclick="confirmarPedido(${JSON.stringify(item.nome).replace(/"/g,"'")}, '${adds.join(', ')}', '${rems.join(', ')}', '${total.toFixed(2).replace('.',',')}')" style="width:100%;background:#25D366;color:#fff;padding:1rem;border:none;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;">
+        <svg style="width:20px;height:20px;fill:white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Enviar pedido no WhatsApp
+      </button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if(e.target === overlay) overlay.remove(); });
+}
+function toggleEntrega() {
+  const val = document.querySelector('input[name=entrega]:checked').value;
+  document.getElementById('campos-delivery').style.display = val === 'delivery' ? 'block' : 'none';
+  document.getElementById('msg-retirada').style.display = val === 'retirada' ? 'block' : 'none';
+  document.getElementById('opt-delivery').style.border = val === 'delivery' ? '2px solid var(--laranja)' : '2px solid var(--creme-escuro)';
+  document.getElementById('opt-delivery').style.background = val === 'delivery' ? 'rgba(200,81,42,.1)' : '';
+  document.getElementById('opt-retirada').style.border = val === 'retirada' ? '2px solid var(--laranja)' : '2px solid var(--creme-escuro)';
+  document.getElementById('opt-retirada').style.background = val === 'retirada' ? 'rgba(200,81,42,.1)' : '';
+}
+function formataCep(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length > 5) v = v.slice(0,5) + '-' + v.slice(5,8);
+  el.value = v;
+}
+function confirmarPedido(nome, adds, rems, total) {
+  const tipo = document.querySelector('input[name=entrega]:checked').value;
+  let msg = `🍔 Pedido — Carne & Pão\n\n`;
+  msg += `*Lanche:* ${nome}\n`;
+  if (adds) msg += `*Adicionais:* ${adds}\n`;
+  if (rems) msg += `*Sem:* ${rems}\n`;
+  msg += `*Total:* R$ ${total}\n\n`;
+  if (tipo === 'delivery') {
+    const cep = (document.getElementById('campo-cep')?.value || '').trim();
+    const end = (document.getElementById('campo-end')?.value || '').trim();
+    const num = (document.getElementById('campo-num')?.value || '').trim();
+    if (!end || !num) { alert('Preencha o endereço e número para delivery!'); return; }
+    msg += `🛵 Entrega (Delivery)\n`;
+    if (cep) msg += `CEP: ${cep}\n`;
+    msg += `Endereço: ${end}, ${num}`;
+  } else {
+    msg += `🏃 Retirada no local\nRua das Hamburguerias, 42`;
+  }
+  const url = `https://wa.me/${WPP}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+// ── REVEAL ────────────────────────────────────────
+function observeReveal() {
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e,i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold:0.1 });
+  reveals.forEach(el => observer.observe(el));
+}
+renderCards();
+</script>
 </body>
-</html>
+  </html>
