@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+  <html lang="pt-BR">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carne e Pao - Restaurante</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+  body { background: #1a1210; color: #f5efe6; }
+    header { background: #2b1d17; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c9852f; }
+  header h1 { color: #c9852f; font-size: 28px; letter-spacing: 1px; }
+    nav a { color: #f5efe6; text-decoration: none; margin-left: 25px; font-weight: 600; }
+      nav a:hover { color: #c9852f; }
+      .hero { text-align: center; padding: 80px 20px; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1544025162-d76694265947?w=1200') center/cover; }
+  .hero h2 { font-size: 42px; margin-bottom: 15px; color: #fff; }
+    .hero p { font-size: 18px; color: #eee; margin-bottom: 25px; }
+    .btn { background: #c9852f; color: #1a1210; padding: 14px 30px; border: none; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; text-decoration: none; }
+    section { padding: 60px 40px; }
+  h2.titulo { text-align: center; color: #c9852f; font-size: 32px; margin-bottom: 40px; }
+    .cardapio { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; max-width: 1000px; margin: 0 auto; }
+  .item { background: #2b1d17; padding: 25px; border-radius: 12px; border: 1px solid #4a352a; }
+  .item h3 { color: #c9852f; margin-bottom: 8px; }
+    .item p { color: #ccc; font-size: 14px; margin-bottom: 12px; }
+      .item .preco { color: #f5efe6; font-weight: bold; font-size: 18px; }
+    .sobre { max-width: 800px; margin: 0 auto; text-align: center; color: #ddd; line-height: 1.7; }
+    .contato { text-align: center; }
+  .contato p { margin: 8px 0; color: #ddd; }
+    footer { text-align: center; padding: 25px; background: #2b1d17; color: #999; font-size: 14px; }
+</style>
+  </head>
+  <body>
+
+<header>
+  <h1>Carne e Pao</h1>
+  <nav>
+    <a href="#cardapio">Cardapio</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#contato">Contato</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <h2>Sabor de verdade, do jeito que voce gosta</h2>
+    <p>Lanches artesanais feitos com carne selecionada e pao fresquinho todos os dias</p>
+    <a href="#cardapio" class="btn">Ver Cardapio</a>
+  </div>
+  <section id="cardapio">
+    <h2 class="titulo">Nosso Cardapio</h2>
+    <div class="cardapio">
+      <div class="item">
+        <h3>Classico</h3>
+      <p>Pao brioche, hamburguer 180g, queijo, alface, tomate e molho da casa</p>
+      <div class="preco">R$ 24,90</div>
+    </div>
+    <div class="item">
+      <h3>Bacon Especial</h3>
+      <p>Pao brioche, hamburguer 180g, cheddar, bacon crocante e cebola caramelizada</p>
+      <div class="preco">R$ 29,90</div>
+    </div>
+    <div class="item">
+      <h3>Duplo Carne e Pao</h3>
+      <p>Pao australiano, dois hamburgueres 150g, queijo prato e molho especial</p>
+      <div class="preco">R$ 34,90</div>
+    </div>
+    <div class="item">
+      <h3>Costela Desfiada</h3>
+      <p>Pao brioche, costela desfiada, queijo coalho e vinagrete</p>
+      <div class="preco">R$ 32,90</div>
+    </div>
+  </div>
+</section>
+<section id="sobre">
+  <h2 class="titulo">Sobre Nos</h2>
+  <div class="sobre">
+    <p>O Carne e Pao nasceu da paixao por bons lanches e ingredientes de qualidade. Cada hamburguer e montado na hora, com pao fresco e carne selecionada, para garantir uma experiencia unica a cada mordida.</p>
+  </div>
+</section>
+
+<section id="contato">
+  <h2 class="titulo">Contato</h2>
+  <div class="contato">
+    <p>Endereco: Rua Exemplo, 123 - Centro</p>
+    <p>Telefone: (11) 99999-9999</p>
+    <p>Horario: Terca a Domingo, 18h as 23h</p>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Carne e Pao. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>
