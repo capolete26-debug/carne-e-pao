@@ -285,6 +285,7 @@
   async function buscarCep(cep) {
     ultimoCepBuscado = cep;
     cepInfo.textContent = 'Buscando endereço…';
+    const limparEndereco = () => { campo('rua').value = ''; campo('bairro').value = ''; };
     try {
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 6000);
@@ -292,13 +293,14 @@
       clearTimeout(t);
       const d = await r.json();
       if (cep !== ultimoCepBuscado) return; // usuário já digitou outro CEP
-      if (d.erro) { cepInfo.textContent = 'CEP não encontrado. Preencha o endereço abaixo.'; return; }
+      if (d.erro) { limparEndereco(); cepInfo.textContent = 'CEP não encontrado. Confira o CEP ou preencha o endereço abaixo.'; return; }
+      limparEndereco();
       if (d.logradouro) { campo('rua').value = d.logradouro; limparErro('rua'); }
       if (d.bairro) { campo('bairro').value = d.bairro; limparErro('bairro'); }
       cepInfo.textContent = [d.localidade, d.uf].filter(Boolean).join(' — ');
       if (d.logradouro) campo('num').focus();
     } catch {
-      if (cep === ultimoCepBuscado) cepInfo.textContent = 'Não deu pra buscar o CEP agora. Preencha o endereço abaixo.';
+      if (cep === ultimoCepBuscado) cepInfo.textContent = 'Não deu pra buscar o CEP agora. Confira se rua e bairro abaixo batem com esse CEP.';
     }
   }
 
@@ -318,16 +320,30 @@
   function limparErro(nome) {
     const el = campo(nome);
     el.removeAttribute('aria-invalid');
+    el.removeAttribute('aria-describedby');
     const err = $(`#f-${nome}-erro`);
     if (err) err.textContent = '';
   }
   ['nome', 'rua', 'num', 'bairro'].forEach(n => campo(n).addEventListener('input', () => limparErro(n)));
+
+  function trocoValor() {
+    const t = campo('troco').value.replace(/[^\d,.]/g, '').replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.');
+    const n = parseFloat(t);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  }
 
   function validar() {
     const obrig = ['nome'];
     if (tipoEntrega() === 'delivery') obrig.push('rua', 'num', 'bairro');
     ['nome', 'rua', 'num', 'bairro'].forEach(limparErro);
     const faltando = obrig.filter(n => !campo(n).value.trim());
+    $('#f-troco-erro').textContent = '';
+    campo('troco').removeAttribute('aria-invalid');
+    if (campo('pagto').value === 'Dinheiro' && campo('troco').value.trim() && trocoValor() < subtotal()) {
+      campo('troco').setAttribute('aria-invalid', 'true');
+      $('#f-troco-erro').textContent = `O troco precisa ser para um valor maior que ${brl(subtotal())}.`;
+      if (!faltando.length) { campo('troco').focus(); return false; }
+    }
     const msgs = { nome: 'Diz pra gente seu nome.', rua: 'Informe a rua.', num: 'Informe o número.', bairro: 'Informe o bairro.' };
     faltando.forEach(n => marcarErro(n, msgs[n]));
     if (faltando.length) campo(faltando[0]).focus();
@@ -354,7 +370,8 @@
     }
 
     let pagto = `💳 *Pagamento:* ${v('pagto')}`;
-    if (v('pagto') === 'Dinheiro' && v('troco')) pagto += ` (troco para R$ ${v('troco')})`;
+    const troco = trocoValor();
+    if (v('pagto') === 'Dinheiro' && troco) pagto += ` (troco para ${brl(troco)})`;
     linhas.push('', pagto);
     if (v('obs')) linhas.push(`📝 *Obs:* ${v('obs')}`);
     return linhas.join('\n');
