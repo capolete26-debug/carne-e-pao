@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="theme-color" content="#1A1412"/>
+  <title>Painel — Carne &amp; Pão</title>
+  <link rel="icon" type="image/png" href="../logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="painel.css"/>
+</head>
+<body>
+
+<!-- CARREGANDO -->
+<div class="tela-centro" data-tela="carregando">
+  <img class="logo-grande" src="../logo.png" alt="" width="96" height="96"/>
+  <p>Carregando…</p>
+</div>
+
+<!-- SEM CONFIGURAÇÃO -->
+<div class="tela-centro" data-tela="sem-config" hidden>
+  <img class="logo-grande" src="../logo.png" alt="" width="96" height="96"/>
+  <h1>Painel ainda não configurado</h1>
+  <p>Preencha <code>js/config.js</code> com os dados do Supabase. O passo a passo está em <code>supabase/COMO-CONFIGURAR.md</code>.</p>
+</div>
+
+<!-- LOGIN -->
+<div class="tela-centro" data-tela="login" hidden>
+  <form class="login-card" data-form-login novalidate>
+    <img class="logo-grande" src="../logo.png" alt="" width="96" height="96"/>
+    <h1>Painel da equipe</h1>
+    <p class="login-sub">Carne &amp; Pão</p>
+    <label class="campo">
+      <span>Usuário ou e-mail</span>
+      <input name="login" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+    </label>
+    <label class="campo">
+      <span>Senha</span>
+      <input name="senha" type="password" autocomplete="current-password" required>
+    </label>
+    <p class="erro" data-erro-login role="alert"></p>
+    <button class="btn btn--laranja btn--largo" type="submit">Entrar</button>
+  </form>
+</div>
+
+<!-- SEM ACESSO -->
+<div class="tela-centro" data-tela="sem-acesso" hidden>
+  <img class="logo-grande" src="../logo.png" alt="" width="96" height="96"/>
+  <h1>Sua conta ainda não tem acesso</h1>
+  <p>Peça para o dono te cadastrar na equipe.</p>
+  <button class="btn" type="button" data-sair>Sair</button>
+</div>
+
+<!-- APP -->
+<div class="app" data-tela="app" hidden>
+  <header class="topo">
+    <div class="topo-marca">
+      <img src="../logo.png" alt="" width="40" height="40"/>
+      <span>Painel</span>
+    </div>
+    <button class="loja-pill" type="button" data-ir="loja" data-loja-pill>
+      <span class="ponto"></span><span data-loja-pill-texto>Loja</span>
+    </button>
+    <div class="topo-user">
+      <span class="topo-nome" data-meu-nome></span>
+      <span class="papel" data-meu-papel></span>
+    </div>
+  </header>
+
+  <nav class="abas" aria-label="Seções do painel">
+    <button type="button" data-aba="pedidos" aria-current="page">📋 Pedidos <span class="contador" data-contador-novos hidden></span></button>
+    <button type="button" data-aba="cardapio">🍔 Cardápio</button>
+    <button type="button" data-aba="loja">🏪 Loja</button>
+    <button type="button" data-aba="relatorios" data-so-dono>📊 Relatórios</button>
+    <button type="button" data-aba="equipe" data-so-dono>👥 Equipe</button>
+    <button type="button" data-aba="conta">⚙️ Conta</button>
+  </nav>
+
+  <main class="conteudo">
+
+    <!-- PEDIDOS -->
+    <section data-secao="pedidos">
+      <div class="barra">
+        <h2>Pedidos de hoje</h2>
+        <div class="barra-acoes">
+          <span class="conexao" data-conexao title="Atualização em tempo real">● ao vivo</span>
+          <button class="btn btn--pequeno" type="button" data-som>🔇 Ativar som</button>
+        </div>
+      </div>
+      <div class="quadro">
+        <div class="coluna" data-coluna="recebido"><h3>🆕 Novos <span data-n></span></h3><div class="lista"></div></div>
+        <div class="coluna" data-coluna="preparando"><h3>🔥 Na chapa <span data-n></span></h3><div class="lista"></div></div>
+        <div class="coluna" data-coluna="saiu"><h3>🛵 Pronto / saiu <span data-n></span></h3><div class="lista"></div></div>
+      </div>
+      <details class="finalizados">
+        <summary>Finalizados hoje <span data-n-finalizados></span></summary>
+        <div class="lista" data-lista-finalizados></div>
+      </details>
+    </section>
+
+    <!-- CARDÁPIO -->
+    <section data-secao="cardapio" hidden>
+      <div class="barra">
+        <h2>Cardápio</h2>
+        <button class="btn btn--laranja" type="button" data-novo-produto data-so-dono>+ Novo item</button>
+      </div>
+      <p class="dica" data-so-funcionario>Marque o que acabou. O site atualiza sozinho em até 2 minutos.</p>
+      <div class="produtos" data-lista-produtos></div>
+    </section>
+
+    <!-- LOJA -->
+    <section data-secao="loja" hidden>
+      <div class="barra"><h2>Loja</h2></div>
+      <form class="cartao" data-form-loja>
+        <fieldset class="opcoes-modo">
+          <legend>A loja está…</legend>
+          <label><input type="radio" name="modo" value="auto"><span><strong>⏰ Automático</strong><small>Abre e fecha pelo horário (<span data-horario></span>)</small></span></label>
+          <label><input type="radio" name="modo" value="aberto"><span><strong>🟢 Aberta agora</strong><small>Ignora o horário e recebe pedidos</small></span></label>
+          <label><input type="radio" name="modo" value="fechado"><span><strong>🔴 Fechada agora</strong><small>O site não aceita pedidos</small></span></label>
+        </fieldset>
+        <label class="campo">
+          <span>Aviso no site <small>(opcional)</small></span>
+          <input name="aviso" type="text" maxlength="200" placeholder="Ex.: Hoje abrimos às 19h!">
+        </label>
+        <button class="btn btn--laranja" type="submit">Salvar</button>
+      </form>
+    </section>
+
+    <!-- RELATÓRIOS -->
+    <section data-secao="relatorios" hidden>
+      <div class="barra">
+        <h2>Relatórios</h2>
+      </div>
+      <div class="periodos" data-periodos>
+        <button type="button" data-periodo="hoje" aria-pressed="true">Hoje</button>
+        <button type="button" data-periodo="ontem">Ontem</button>
+        <button type="button" data-periodo="7">7 dias</button>
+        <button type="button" data-periodo="30">30 dias</button>
+        <button type="button" data-periodo="mes">Este mês</button>
+        <button type="button" data-periodo="mes-passado">Mês passado</button>
+        <span class="periodo-custom">
+          <input type="date" data-de aria-label="De"> até <input type="date" data-ate aria-label="Até">
+          <button type="button" class="btn btn--pequeno" data-periodo="custom">Ver</button>
+        </span>
+      </div>
+      <div data-relatorio><p class="dica">Carregando…</p></div>
+    </section>
+
+    <!-- EQUIPE -->
+    <section data-secao="equipe" hidden>
+      <div class="barra"><h2>Equipe</h2></div>
+      <div class="dupla">
+        <div class="cartao">
+          <h3>Quem tem acesso</h3>
+          <ul class="equipe-lista" data-lista-equipe></ul>
+        </div>
+        <form class="cartao" data-form-membro novalidate>
+          <h3>Adicionar funcionário</h3>
+          <label class="campo"><span>Nome</span><input name="nome" type="text" maxlength="60" required></label>
+          <label class="campo"><span>Usuário <small>(para entrar no painel)</small></span>
+            <input name="usuario" type="text" maxlength="30" autocapitalize="none" spellcheck="false" placeholder="ex.: ana" required pattern="[a-z0-9._-]{3,30}"></label>
+          <label class="campo"><span>Senha inicial <small>(mín. 8 caracteres)</small></span>
+            <input name="senha" type="text" minlength="8" autocomplete="off" required></label>
+          <p class="erro" data-erro-membro role="alert"></p>
+          <button class="btn btn--laranja" type="submit">Criar acesso</button>
+          <p class="dica">Passe o usuário e a senha pra pessoa. Ela pode trocar a senha depois, em ⚙️ Conta.</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- CONTA -->
+    <section data-secao="conta" hidden>
+      <div class="barra"><h2>Minha conta</h2></div>
+      <div class="dupla">
+        <form class="cartao" data-form-senha novalidate>
+          <h3>Trocar senha</h3>
+          <label class="campo"><span>Nova senha <small>(mín. 8 caracteres)</small></span><input name="senha" type="password" minlength="8" autocomplete="new-password" required></label>
+          <label class="campo"><span>Repita a nova senha</span><input name="senha2" type="password" minlength="8" autocomplete="new-password" required></label>
+          <p class="erro" data-erro-senha role="alert"></p>
+          <button class="btn btn--laranja" type="submit">Salvar senha</button>
+        </form>
+        <div class="cartao">
+          <h3>Sessão</h3>
+          <p class="dica">Entrou como <strong data-meu-login></strong>.</p>
+          <button class="btn" type="button" data-sair>Sair do painel</button>
+          <p class="dica"><a href="../" target="_blank" rel="noopener">Abrir o site dos clientes ↗</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- EDITOR DE ITEM -->
+<dialog class="dialogo" data-dialogo-produto>
+  <form method="dialog" class="dialogo-form" data-form-produto novalidate>
+    <div class="dialogo-topo">
+      <h2 data-titulo-produto>Item</h2>
+      <button type="button" class="fechar" data-fechar-dialogo aria-label="Fechar">✕</button>
+    </div>
+    <div class="dialogo-corpo">
+      <div class="grade-2">
+        <label class="campo"><span>Nome</span><input name="nome" type="text" maxlength="60" required></label>
+        <label class="campo campo--emoji"><span>Emoji</span><input name="emoji" type="text" maxlength="8" required></label>
+      </div>
+      <div class="grade-3">
+        <label class="campo"><span>Preço (R$)</span><input name="preco" type="text" inputmode="decimal" required placeholder="28,00"></label>
+        <label class="campo"><span>Categoria</span>
+          <select name="cat">
+            <option value="burger">Burgers</option>
+            <option value="acomp">Acompanhamentos</option>
+            <option value="bebida">Bebidas</option>
+            <option value="sobremesa">Sobremesas</option>
+          </select></label>
+        <label class="campo"><span>Ordem</span><input name="ordem" type="number" step="1" min="0" max="999"></label>
+      </div>
+      <label class="campo"><span>Descrição</span><textarea name="descricao" rows="2" maxlength="300"></textarea></label>
+      <label class="campo"><span>Selo <small>(opcional, ex.: Mais pedido)</small></span><input name="tag" type="text" maxlength="30"></label>
+      <div class="sublista">
+        <div class="sublista-topo"><strong>Adicionais</strong><button type="button" class="btn btn--pequeno" data-add-adicional>+ adicional</button></div>
+        <div data-lista-adicionais></div>
+      </div>
+      <div class="sublista">
+        <div class="sublista-topo"><strong>Ingredientes que dá pra tirar</strong><button type="button" class="btn btn--pequeno" data-add-removivel>+ ingrediente</button></div>
+        <div data-lista-removiveis></div>
+      </div>
+      <label class="check"><input type="checkbox" name="ativo"> Mostrar no site</label>
+      <p class="erro" data-erro-produto role="alert"></p>
+    </div>
+    <div class="dialogo-rodape">
+      <button type="button" class="btn btn--perigo" data-apagar-produto>Apagar</button>
+      <span></span>
+      <button type="button" class="btn" data-fechar-dialogo>Cancelar</button>
+      <button type="submit" class="btn btn--laranja" value="salvar">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+<div class="impressao" data-impressao aria-hidden="true"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/menu.js"></script>
+<script src="painel.js"></script>
+</body>
+</html>
