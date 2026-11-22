@@ -152,6 +152,7 @@
     $$('[data-cart-total]').forEach(el => { el.textContent = total; });
     $('.nav-cart').setAttribute('aria-label', `Abrir pedido (${qtd} ${qtd === 1 ? 'item' : 'itens'})`);
     $('[data-cart-float]').hidden = qtd === 0 || !drawer.hidden;
+    document.body.classList.toggle('tem-pedido', qtd > 0);
     $('[data-cart-subtotal]').textContent = total;
 
     const vazio = carrinho.length === 0;
