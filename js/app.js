@@ -416,7 +416,8 @@
     try {
       const r = await fetch(`${SB.url}/rest/v1/rpc/criar_pedido`, {
         method: 'POST', signal: ctrl.signal,
-        headers: { apikey: SB.anonKey, Authorization: `Bearer ${SB.anonKey}`, 'Content-Type': 'application/json' },
+        // só "apikey": funciona com a chave anon antiga e com a nova "publishable"
+        headers: { apikey: SB.anonKey, 'Content-Type': 'application/json' },
         body: JSON.stringify(corpo),
       });
       const d = await r.json().catch(() => ({}));
@@ -589,7 +590,7 @@
     const t = setTimeout(() => ctrl.abort(), 6000);
     try {
       const r = await fetch(`${SB.url}/rest/v1/${caminho}`, {
-        signal: ctrl.signal, headers: { apikey: SB.anonKey, Authorization: `Bearer ${SB.anonKey}` },
+        signal: ctrl.signal, headers: { apikey: SB.anonKey },
       });
       if (!r.ok) throw new Error(r.status);
       return await r.json();
