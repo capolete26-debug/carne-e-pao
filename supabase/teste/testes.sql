@@ -91,8 +91,12 @@ select pg_temp.checa(meu_papel() = 'dono', 'dono reconhecido');
 select adicionar_membro('00000000-0000-0000-0000-0000000f0f0f', 'Ana', 'ana');
 select pg_temp.checa((select count(*) from equipe) = 2, 'dono vê equipe');
 select pg_temp.espera_erro($$insert into equipe (user_id,nome,login,papel) values ('00000000-0000-0000-0000-0000000f0f02','X','x','dono')$$, 'row-level security');
-delete from equipe where user_id = auth.uid();  -- não deve remover a si mesmo
-select pg_temp.checa((select count(*) from equipe where papel='dono') = 1, 'dono continua dono');
+select pg_temp.espera_erro($$delete from equipe where user_id = auth.uid()$$, 'permission denied');
+select pg_temp.espera_erro($$select remover_membro(auth.uid())$$, 'membro_nao_encontrado');  -- dono não remove a si mesmo
+select pg_temp.espera_erro($$update equipe set papel = 'dono'$$, 'permission denied');
+select pg_temp.checa((select count(*) from equipe where papel='dono' and ativo) = 1, 'dono continua dono');
+-- estranho que "reservou" um usuário não pode ser reativado (nunca foi da equipe)
+select pg_temp.espera_erro($$select reativar_membro('00000000-0000-0000-0000-00000000bad0')$$, 'membro_nao_encontrado');
 update produtos set preco = 30 where id = 'classico';
 select pg_temp.checa((select preco from produtos where id='classico') = 30, 'dono muda preço');
 update produtos set preco = 28 where id = 'classico';
@@ -111,11 +115,25 @@ select pg_temp.espera_erro($$select atualizar_status(1, 'qualquer')$$, 'status_i
 select marcar_esgotado('batata', true);
 select pg_temp.espera_erro($$select relatorio(current_date, current_date)$$, 'sem_permissao');
 select pg_temp.espera_erro($$select adicionar_membro('00000000-0000-0000-0000-0000000f0f02', 'X', 'x')$$, 'sem_permissao');
-delete from equipe where user_id = '00000000-0000-0000-0000-00000000d0d0';
-select pg_temp.checa((select count(*) from equipe) = 1, 'funcionária não remove ninguém');
+select pg_temp.espera_erro($$delete from equipe where user_id = '00000000-0000-0000-0000-00000000d0d0'$$, 'permission denied');
+select pg_temp.espera_erro($$select remover_membro('00000000-0000-0000-0000-00000000d0d0')$$, 'sem_permissao');
+select pg_temp.espera_erro($$select reativar_membro(auth.uid())$$, 'sem_permissao');
 update produtos set preco = 1 where id = 'classico';
 select pg_temp.checa((select preco from produtos where id='classico') = 28, 'funcionária não muda preço');
 select definir_modo_loja('fechado', 'Acabou o pão!');
+
+-- ── DONO REMOVE E REATIVA A FUNCIONÁRIA ─────────────────────────────────────
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000d0d0', false);
+select remover_membro('00000000-0000-0000-0000-0000000f0f0f');
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-0000000f0f0f', false);
+select pg_temp.checa(meu_papel() is null, 'removida perde o papel');
+select pg_temp.checa((select count(*) from pedidos) = 0, 'removida não vê pedidos');
+select pg_temp.espera_erro($$select atualizar_status(1, 'entregue')$$, 'sem_permissao');
+select pg_temp.checa((select ativo from equipe where user_id = auth.uid()) = false, 'removida vê que está desativada');
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000d0d0', false);
+select reativar_membro('00000000-0000-0000-0000-0000000f0f0f');
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-0000000f0f0f', false);
+select pg_temp.checa(meu_papel() = 'funcionario', 'reativada volta a ter acesso');
 
 -- ── CLIENTE DE NOVO: esgotado e loja fechada ────────────────────────────────
 set role anon;

@@ -32,7 +32,7 @@
   const ERROS = {
     'Invalid login credentials': 'Usuário ou senha incorretos.',
     'Email not confirmed': 'Esta conta ainda não foi confirmada. Veja o passo a passo (desligar "Confirm email").',
-    'User already registered': 'Já existe uma conta com esse usuário.',
+    'User already registered': 'Esse usuário já existe. Se a pessoa já trabalhou aqui, clique em "Reativar" na lista ao lado. Senão, escolha outro nome de usuário.',
     sem_permissao: 'Você não tem permissão para isso.',
     'duplicate key value violates unique constraint "produtos_pkey"': 'Já existe um item com esse código.',
   };
@@ -108,13 +108,26 @@
       mostrarTela('login');
       return;
     }
+    // O Supabase avisa mais de uma vez ao abrir (sessão salva + login): inicia uma vez só
     if (iniciado) return;
-    const { data, error } = await sb.from('equipe').select('user_id,nome,login,papel').eq('user_id', sessao.user.id).maybeSingle();
-    if (error) { toast(traduz(error), true); mostrarTela('login'); return; }
-    if (!data) { mostrarTela('sem-acesso'); return; }
-    eu = data;
     iniciado = true;
+    const { data, error } = await sb.from('equipe').select('user_id,nome,login,papel,ativo').eq('user_id', sessao.user.id).maybeSingle();
+    if (error) { iniciado = false; toast(traduz(error), true); mostrarTela('login'); return; }
+    if (!data || !data.ativo) { mostrarTela('sem-acesso'); return; }
+    eu = data;
     iniciarApp();
+  }
+
+  // Se o dono tirar o acesso de alguém com o painel aberto, a tela troca sozinha
+  async function conferirAcesso() {
+    const { data, error } = await sb.from('equipe').select('ativo,papel').eq('user_id', eu.user_id).maybeSingle();
+    if (error) return; // sem internet: tenta de novo depois
+    if (!data || !data.ativo) {
+      if (canal) { sb.removeChannel(canal); canal = null; }
+      mostrarTela('sem-acesso');
+      return false;
+    }
+    return true;
   }
 
   // ── APP ───────────────────────────────────────────
@@ -130,7 +143,10 @@
     carregarPedidos();
     carregarLoja();
     ligarTempoReal();
-    setInterval(() => { carregarPedidos(); carregarLoja(); }, 60 * 1000); // segurança caso o tempo real caia
+    setInterval(async () => { // segurança caso o tempo real caia
+      if (await conferirAcesso() === false) return;
+      carregarPedidos(); carregarLoja();
+    }, 60 * 1000);
     setInterval(atualizarTempos, 30 * 1000);
   }
 
@@ -580,23 +596,29 @@
     if (!ehDono()) return;
     const { data, error } = await sb.from('equipe').select('*').order('papel').order('nome');
     if (error) { toast(traduz(error), true); return; }
-    $('[data-lista-equipe]').innerHTML = data.map(m => `
-      <li data-membro="${esc(m.user_id)}">
+    const linha = m => `
+      <li data-membro="${esc(m.user_id)}"${m.ativo ? '' : ' class="desativado"'}>
         <span class="quem"><strong>${esc(m.nome)}</strong><small>${esc(m.login.replace('@' + DOMINIO_EQUIPE, ''))}</small></span>
         <span class="tag${m.papel === 'dono' ? '' : ' tag--retirada'}">${m.papel === 'dono' ? 'Dono' : 'Funcionário'}</span>
-        ${m.papel !== 'dono' ? '<button type="button" class="btn btn--pequeno btn--perigo" data-remover-membro>Remover</button>' : ''}
-      </li>`).join('');
+        ${m.papel === 'dono' ? '' : m.ativo
+          ? '<button type="button" class="btn btn--pequeno btn--perigo" data-remover-membro>Remover</button>'
+          : '<button type="button" class="btn btn--pequeno" data-reativar-membro>Reativar</button>'}
+      </li>`;
+    const ativos = data.filter(m => m.ativo), antigos = data.filter(m => !m.ativo);
+    $('[data-lista-equipe]').innerHTML = ativos.map(linha).join('')
+      + (antigos.length ? `<li class="equipe-sep">Sem acesso (pode reativar)</li>${antigos.map(linha).join('')}` : '');
   }
 
   $('[data-lista-equipe]').addEventListener('click', async e => {
-    const b = e.target.closest('[data-remover-membro]');
-    if (!b) return;
-    const li = b.closest('[data-membro]');
+    const rem = e.target.closest('[data-remover-membro]');
+    const rea = e.target.closest('[data-reativar-membro]');
+    if (!rem && !rea) return;
+    const li = (rem || rea).closest('[data-membro]');
     const nome = $('strong', li).textContent;
-    if (!confirm(`Tirar o acesso de ${nome} ao painel?`)) return;
-    const { error } = await sb.from('equipe').delete().eq('user_id', li.dataset.membro);
+    if (rem && !confirm(`Tirar o acesso de ${nome} ao painel?`)) return;
+    const { error } = await sb.rpc(rem ? 'remover_membro' : 'reativar_membro', { p_user_id: li.dataset.membro });
     if (error) { toast(traduz(error), true); return; }
-    toast(`${nome} não tem mais acesso.`);
+    toast(rem ? `${nome} não tem mais acesso.` : `${nome} voltou a ter acesso, com a mesma senha de antes.`);
     carregarEquipe();
   });
 

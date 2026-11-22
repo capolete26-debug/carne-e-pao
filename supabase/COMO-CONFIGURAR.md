@@ -93,8 +93,8 @@ Isso cria o cardápio (já com os lanches atuais), os pedidos, a equipe e as reg
 ## Dúvidas comuns
 
 **Alguém saiu da equipe.**
-Em **👥 Equipe**, clique em **Remover**. O acesso ao painel acaba na hora.
-Pra fazer uma faxina completa, apague também o login em **Authentication → Users** no Supabase.
+Em **👥 Equipe**, clique em **Remover**. O acesso ao painel acaba na hora (se a pessoa estiver com o painel aberto, ele fecha em até 1 minuto).
+A pessoa fica na lista "Sem acesso". Se ela voltar a trabalhar aí, clique em **Reativar** e ela entra com a mesma senha de antes.
 
 **Painel num tablet ou computador da loja.**
 O painel fica logado nesse aparelho. No fim do turno, use **⚙️ Conta → Sair** se outras pessoas usam o mesmo aparelho.

@@ -14,6 +14,8 @@ create table if not exists public.equipe (
   papel     text not null check (papel in ('dono', 'funcionario')),
   criado_em timestamptz not null default now()
 );
+-- Quem sai da equipe fica desativado (não apagado), para poder ser reativado depois
+alter table public.equipe add column if not exists ativo boolean not null default true;
 
 -- Cardápio
 create table if not exists public.produtos (
@@ -78,7 +80,7 @@ alter table public.pedidos_limite enable row level security;
 -- Papel de quem está logado: 'dono', 'funcionario' ou null
 create or replace function public.meu_papel()
 returns text language sql stable security definer set search_path = public as $$
-  select papel from public.equipe where user_id = auth.uid()
+  select papel from public.equipe where user_id = auth.uid() and ativo
 $$;
 
 create or replace function public.e_dono()
@@ -105,9 +107,8 @@ create policy equipe_ver on public.equipe for select to authenticated
 drop policy if exists equipe_dono_incluir on public.equipe;
 create policy equipe_dono_incluir on public.equipe for insert to authenticated
   with check (public.e_dono() and papel = 'funcionario');
+-- remover/reativar só pelas funções remover_membro e reativar_membro
 drop policy if exists equipe_dono_remover on public.equipe;
-create policy equipe_dono_remover on public.equipe for delete to authenticated
-  using (public.e_dono() and user_id <> auth.uid());
 
 -- produtos: todo mundo vê os ativos; equipe vê todos; só o dono edita
 drop policy if exists produtos_ver on public.produtos;
@@ -136,7 +137,7 @@ create policy pedidos_ver on public.pedidos for select to authenticated
 revoke all on public.equipe, public.produtos, public.loja, public.pedidos, public.pedidos_limite from anon, authenticated;
 grant select on public.produtos, public.loja to anon;
 grant select on public.equipe, public.produtos, public.loja, public.pedidos to authenticated;
-grant insert, delete on public.equipe to authenticated;
+grant insert on public.equipe to authenticated;
 grant insert, update, delete on public.produtos to authenticated;
 
 -- ── AÇÕES DO SITE E DO PAINEL ───────────────────────────────────────────────
@@ -338,6 +339,24 @@ begin
   values (p_user_id, left(btrim(p_nome), 60), left(btrim(p_login), 120), 'funcionario');
 end $$;
 
+-- Dono tira o acesso de um funcionário (a conta fica desativada, pode ser reativada)
+create or replace function public.remover_membro(p_user_id uuid)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.e_dono() then raise exception 'sem_permissao'; end if;
+  update public.equipe set ativo = false where user_id = p_user_id and papel = 'funcionario';
+  if not found then raise exception 'membro_nao_encontrado'; end if;
+end $$;
+
+-- Dono devolve o acesso a quem já foi da equipe
+create or replace function public.reativar_membro(p_user_id uuid)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.e_dono() then raise exception 'sem_permissao'; end if;
+  update public.equipe set ativo = true where user_id = p_user_id and papel = 'funcionario';
+  if not found then raise exception 'membro_nao_encontrado'; end if;
+end $$;
+
 -- Usado só uma vez, no SQL Editor, para cadastrar o dono:
 --   select public.tornar_dono('seu-email@exemplo.com', 'Seu nome');
 create or replace function public.tornar_dono(p_email text, p_nome text)
@@ -360,6 +379,8 @@ grant execute on function public.marcar_esgotado(text, boolean) to authenticated
 grant execute on function public.definir_modo_loja(text, text) to authenticated;
 grant execute on function public.relatorio(date, date) to authenticated;
 grant execute on function public.adicionar_membro(uuid, text, text) to authenticated;
+grant execute on function public.remover_membro(uuid) to authenticated;
+grant execute on function public.reativar_membro(uuid) to authenticated;
 -- tornar_dono fica sem permissão de propósito: só roda pelo SQL Editor.
 
 -- Pedidos novos aparecem no painel na hora (tempo real)
