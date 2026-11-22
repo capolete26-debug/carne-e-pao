@@ -33,4 +33,5 @@ css/style.css   estilos
 js/menu.js      cardápio e dados da loja
 js/app.js       carrinho, formulário, WhatsApp, status aberto/fechado
 logo.png        logo
+img/            mascote e manchas de tinta
 ```

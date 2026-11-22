@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Carne &amp; Pão — Smash Burger Artesanal em São Paulo</title>
   <meta name="description" content="Smash burger artesanal em São Paulo. Carne fresca esmagada na chapa, queijo derretido e pão de verdade. Monte seu pedido e mande pelo WhatsApp — delivery ou retirada."/>
-  <meta name="theme-color" content="#3E1109"/>
+  <meta name="theme-color" content="#FFFCF8"/>
   <link rel="icon" type="image/png" href="logo.png"/>
   <link rel="apple-touch-icon" href="logo.png"/>
 
@@ -80,29 +80,34 @@
 <main>
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-circle"></div>
-  <div class="hero-inner">
-    <img class="hero-logo" src="logo.png" alt="Logo da Carne e Pão" width="160" height="160"/>
-    <span class="hero-badge">✦ Smash Burger Artesanal ✦</span>
-    <h1 class="hero-h1">
-      <span class="hero-title">CARNE</span>
-      <span class="hero-e">&amp;</span>
-      <span class="hero-title"><em>Pão</em></span>
-    </h1>
-    <p class="hero-sub">Esmagado na chapa. Feito com respeito.</p>
-    <p class="status-loja" data-status hidden><span class="status-dot"></span><span data-status-texto></span></p>
-    <div class="hero-btns">
-      <a class="btn-primary" href="#cardapio">Ver cardápio</a>
-      <a class="btn-ghost" href="#contato">Fale com a gente</a>
+  <span class="mancha mancha--1" aria-hidden="true"></span>
+  <span class="mancha mancha--2" aria-hidden="true"></span>
+  <span class="mancha mancha--3" aria-hidden="true"></span>
+  <div class="hero-grid">
+    <div class="hero-inner">
+      <span class="hero-badge">Smash Burger Artesanal</span>
+      <h1 class="hero-h1">
+        <span class="hero-title">CARNE</span>
+        <span class="hero-e">&amp;</span>
+        <span class="hero-title"><em>Pão</em></span>
+      </h1>
+      <p class="hero-sub">Esmagado na chapa. Feito com respeito.</p>
+      <p class="hero-servicos">Delivery<span aria-hidden="true">•</span>Salão<span aria-hidden="true">•</span>Retirada</p>
+      <p class="status-loja" data-status hidden><span class="status-dot"></span><span data-status-texto></span></p>
+      <div class="hero-btns">
+        <a class="btn-primary" href="#cardapio">Ver cardápio</a>
+        <a class="btn-ghost" href="#contato">Fale com a gente</a>
+      </div>
+    </div>
+    <div class="hero-mascote">
+      <img src="img/mascote.png" alt="Mascote da Carne e Pão: um hambúrguer de boné e tênis, deitado de lado" width="720" height="434"/>
     </div>
   </div>
-  <svg class="hero-arc" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,60 Q720,0 1440,60 L1440,60 L0,60 Z" fill="#FDF8F0"/>
-  </svg>
 </section>
 
 <!-- SOBRE -->
 <section id="sobre">
+  <span class="mancha mancha--2" aria-hidden="true"></span>
   <div class="reveal">
     <p class="sobre-label">Nossa história</p>
     <h2 class="sobre-titulo">Simples assim:<br><em>carne boa<br>e pão de verdade.</em></h2>
@@ -126,6 +131,9 @@
 
 <!-- CARDÁPIO -->
 <section id="cardapio" tabindex="-1">
+  <span class="mancha mancha--1" aria-hidden="true"></span>
+  <span class="mancha mancha--3" aria-hidden="true"></span>
+  <span class="mancha mancha--2" aria-hidden="true"></span>
   <div class="section-header">
     <p class="section-label">O que a gente faz</p>
     <h2 class="section-titulo">O <em>Cardápio</em></h2>
@@ -144,6 +152,7 @@
 
 <!-- COMO PEDIR -->
 <section id="como-pedir">
+  <span class="mancha mancha--3" aria-hidden="true"></span>
   <div class="section-header">
     <p class="section-label">Sem complicação</p>
     <h2 class="section-titulo section-titulo--escuro">Como <em>pedir</em></h2>
@@ -169,6 +178,7 @@
 
 <!-- CONTATO -->
 <section id="contato">
+  <span class="mancha mancha--1" aria-hidden="true"></span>
   <div class="reveal">
     <p class="section-label section-label--claro">Onde a gente tá</p>
     <h2 class="contato-titulo">Vem comer<br>ou <em>pede pelo zap</em></h2>
@@ -186,6 +196,7 @@
     </div>
   </div>
   <div class="wpp-card reveal">
+    <img class="wpp-mascote" src="img/mascote.png" alt="" width="720" height="434" loading="lazy"/>
     <p class="wpp-titulo">Bate um papo<br><em>ou manda o pedido</em></p>
     <p class="wpp-desc">Prefere pedir direto? Manda uma mensagem no WhatsApp que a gente responde rapidinho.</p>
     <a class="btn-wpp" href="https://wa.me/5511940609596" target="_blank" rel="noopener">
@@ -222,7 +233,7 @@
 
   <div class="drawer-body">
     <div class="cart-vazio" data-cart-vazio>
-      <p class="cart-vazio-emoji" aria-hidden="true">🍔</p>
+      <img class="cart-vazio-mascote" src="img/mascote.png" alt="" width="720" height="434" loading="lazy"/>
       <p>Seu pedido está vazio.</p>
       <button class="btn-primary" type="button" data-fechar-carrinho data-ir-cardapio>Ver cardápio</button>
     </div>
