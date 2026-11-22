@@ -1,10 +1,19 @@
 (() => {
   'use strict';
 
-  const MENU = window.CARDAPIO || [];
   const LOJA = window.LOJA || {};
-  const MAPA = new Map(MENU.map(i => [i.id, i]));
-  const POR_ID = Object.freeze(Object.assign(Object.create(null), Object.fromEntries(MAPA)));
+  const SB = window.SUPABASE_CONFIG || {};
+  const TEM_BANCO = Boolean(SB.url && SB.anonKey);
+  let MENU = [];
+  let MAPA = new Map();
+  let POR_ID = Object.create(null);
+  let modoLoja = { modo: 'auto', aviso: '' }; // vem do painel
+
+  function definirMenu(lista) {
+    MENU = lista;
+    MAPA = new Map(MENU.map(i => [i.id, i]));
+    POR_ID = Object.freeze(Object.assign(Object.create(null), Object.fromEntries(MAPA)));
+  }
   const CHAVE_CARRINHO = 'carne-e-pao:carrinho';
   const CHAVE_CLIENTE = 'carne-e-pao:cliente';
 
@@ -25,14 +34,14 @@
 
   // ── CARRINHO (estado) ─────────────────────────────
   // Cada linha: { id, qtd, adds:[índices], rems:[índices] }
-  let carrinho = carregarCarrinho();
+  let carrinho = [];
 
   function carregarCarrinho() {
     const bruto = armazem.ler(CHAVE_CARRINHO, []);
     if (!Array.isArray(bruto)) return [];
     return bruto.filter(l => {
       const item = l && typeof l.id === 'string' && MAPA.get(l.id);
-      if (!item || !Number.isInteger(l.qtd) || l.qtd < 1) return false;
+      if (!item || item.esgotado || !Number.isInteger(l.qtd) || l.qtd < 1) return false;
       l.adds = [...new Set((Array.isArray(l.adds) ? l.adds : []).filter(i => Number.isInteger(i) && i >= 0 && i < item.adicionais.length))];
       l.rems = [...new Set((Array.isArray(l.rems) ? l.rems : []).filter(i => Number.isInteger(i) && i >= 0 && i < item.removiveis.length))];
       l.qtd = Math.min(l.qtd, 99);
@@ -64,7 +73,7 @@
       const grupo = grid.closest('.cardapio-grupo');
       if (grupo) grupo.hidden = itens.length === 0;
     });
-    $$('.card').forEach(ligarCard);
+    $$('.card:not(.card--esgotado)').forEach(ligarCard);
   }
 
   function cardHTML(item) {
@@ -82,24 +91,24 @@
         <span class="opcao-tirar" aria-hidden="true">tirar</span>
       </label>`).join('');
     return `
-      <article class="card reveal" data-id="${id}" aria-labelledby="nome-${id}">
+      <article class="card reveal${item.esgotado ? ' card--esgotado' : ''}" data-id="${id}" aria-labelledby="nome-${id}">
         <div class="card-topo">
           <span class="card-emoji" aria-hidden="true">${item.emoji}</span>
-          ${item.tag ? `<span class="card-tag">${esc(item.tag)}</span>` : ''}
+          ${item.esgotado ? '<span class="card-tag card-tag--esgotado">Esgotado hoje</span>' : item.tag ? `<span class="card-tag">${esc(item.tag)}</span>` : ''}
         </div>
         <h4 class="card-nome" id="nome-${id}">${esc(item.nome)}</h4>
         <p class="card-desc">${esc(item.desc)}</p>
         <p class="card-preco" data-preco aria-live="polite">${brl(item.preco)}</p>
-        ${adds ? `<fieldset class="card-opcoes"><legend class="card-opcoes-titulo">✦ Adicionais</legend>${adds}</fieldset>` : ''}
-        ${rems ? `<fieldset class="card-opcoes card-opcoes--rem"><legend class="card-opcoes-titulo">✕ Remover ingrediente</legend>${rems}</fieldset>` : ''}
-        <div class="card-acoes">
+        ${adds && !item.esgotado ? `<fieldset class="card-opcoes"><legend class="card-opcoes-titulo">✦ Adicionais</legend>${adds}</fieldset>` : ''}
+        ${rems && !item.esgotado ? `<fieldset class="card-opcoes card-opcoes--rem"><legend class="card-opcoes-titulo">✕ Remover ingrediente</legend>${rems}</fieldset>` : ''}
+        ${item.esgotado ? '<p class="card-esgotado-msg">Acabou por hoje. Volta amanhã!</p>' : `<div class="card-acoes">
           <div class="qtd" role="group" aria-label="Quantidade">
             <button type="button" data-menos aria-label="Diminuir quantidade" disabled>−</button>
             <output data-qtd>1</output>
             <button type="button" data-mais aria-label="Aumentar quantidade">+</button>
           </div>
           <button type="button" class="btn-add" data-add>Adicionar</button>
-        </div>
+        </div>`}
       </article>`;
   }
 
@@ -156,7 +165,8 @@
     $('[data-cart-subtotal]').textContent = total;
 
     const vazio = carrinho.length === 0;
-    $('[data-cart-vazio]').hidden = !vazio;
+    if (!vazio) $('[data-confirmacao]').hidden = true;
+    $('[data-cart-vazio]').hidden = !vazio || !$('[data-confirmacao]').hidden;
     form.hidden = vazio;
     $('[data-drawer-foot]').hidden = vazio;
 
@@ -225,6 +235,7 @@
     if (drawer.hidden) return;
     drawer.hidden = true;
     backdrop.hidden = true;
+    $('[data-confirmacao]').hidden = true;
     document.body.classList.remove('sem-scroll');
     renderCarrinho();
     if (focoAnterior && document.contains(focoAnterior) && focoAnterior.getClientRects().length > 0) focoAnterior.focus();
@@ -350,9 +361,10 @@
     return faltando.length === 0;
   }
 
-  function montarMensagem() {
+  function montarMensagem(numero) {
     const v = n => campo(n).value.trim();
-    const linhas = ['🍔 *Pedido — Carne & Pão*', '', `*Cliente:* ${v('nome')}`, '', '*Itens:*'];
+    const titulo = numero ? `🍔 *Pedido nº ${numero} — Carne & Pão*` : '🍔 *Pedido — Carne & Pão*';
+    const linhas = [titulo, '', `*Cliente:* ${v('nome')}`, '', '*Itens:*'];
     carrinho.forEach(l => {
       const item = POR_ID[l.id];
       linhas.push(`${l.qtd}x ${item.nome} — ${brl(precoUnitario(item, l.adds) * l.qtd)}`);
@@ -377,23 +389,101 @@
     return linhas.join('\n');
   }
 
-  form.addEventListener('submit', e => {
+  const ERROS_PEDIDO = {
+    loja_fechada: 'A loja está fechada agora. Tenta de novo mais tarde!',
+    produto_esgotado: 'Um dos lanches acabou de esgotar. Atualizamos o cardápio, confere seu pedido.',
+    produto_indisponivel: 'Um dos lanches saiu do cardápio. Atualizamos o cardápio, confere seu pedido.',
+    endereco_incompleto: 'Confere o endereço de entrega.',
+    nome_obrigatorio: 'Diz pra gente seu nome.',
+  };
+
+  // Salva o pedido no banco (painel da loja) e devolve o número
+  async function salvarPedido() {
+    const v = n => campo(n).value.trim();
+    const corpo = {
+      p: {
+        cliente: {
+          nome: v('nome'), tipo: tipoEntrega(), pagamento: v('pagto'), obs: v('obs'),
+          troco: v('pagto') === 'Dinheiro' && trocoValor() ? trocoValor().toFixed(2) : '',
+          endereco: tipoEntrega() === 'delivery'
+            ? { rua: v('rua'), num: v('num'), comp: v('comp'), bairro: v('bairro'), cep: v('cep') } : null,
+        },
+        itens: carrinho.map(l => ({ id: l.id, qtd: l.qtd, adds: l.adds, rems: l.rems })),
+      },
+    };
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 8000);
+    try {
+      const r = await fetch(`${SB.url}/rest/v1/rpc/criar_pedido`, {
+        method: 'POST', signal: ctrl.signal,
+        headers: { apikey: SB.anonKey, Authorization: `Bearer ${SB.anonKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(corpo),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) { const e = new Error(d.message || 'erro'); e.codigo = d.message; throw e; }
+      return d;
+    } finally { clearTimeout(t); }
+  }
+
+  let enviando = false;
+  form.addEventListener('submit', async e => {
     e.preventDefault();
-    if (!carrinho.length || !validar()) return;
+    if (enviando || !carrinho.length || !validar()) return;
+    if (modoLoja.modo === 'fechado') { mostrarToast(ERROS_PEDIDO.loja_fechada); return; }
     const dados = {};
     CAMPOS_LEMBRAR.forEach(n => { dados[n] = campo(n).value.trim(); });
     armazem.gravar(CHAVE_CLIENTE, dados);
+
+    // A janela precisa abrir no clique (antes de esperar a internet), senão o celular bloqueia
+    const janela = window.open('', '_blank');
+    if (janela) janela.opener = null;
+    const botao = $('.btn-enviar');
+    let numero = null;
+
+    if (TEM_BANCO) {
+      enviando = true;
+      botao.disabled = true;
+      botao.classList.add('carregando');
+      try {
+        numero = (await salvarPedido()).id;
+      } catch (err) {
+        const msg = ERROS_PEDIDO[err.codigo];
+        if (msg) {
+          // erro de verdade no pedido: não manda pro WhatsApp
+          if (janela) janela.close();
+          mostrarToast(msg);
+          if (/^produto_/.test(err.codigo)) await carregarDoBanco().then(() => { renderCardapio(); carrinho = carregarCarrinho(); salvarEAtualizar(); observarReveal(); });
+          enviando = false; botao.disabled = false; botao.classList.remove('carregando');
+          return;
+        }
+        // sem internet / banco fora do ar: segue só pelo WhatsApp
+      }
+      enviando = false; botao.disabled = false; botao.classList.remove('carregando');
+    }
+
     // remove caracteres inválidos (ex.: emoji cortado ao colar) que quebrariam o link
-    const msg = montarMensagem().replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '');
+    const msg = montarMensagem(numero).replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '');
     const url = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(msg)}`;
-    const janela = window.open(url, '_blank');
     if (janela) {
-      janela.opener = null;
-      mostrarToast('Abrimos o WhatsApp com seu pedido. É só tocar em enviar!');
+      janela.location.href = url;
     } else {
       location.href = url; // pop-up bloqueado (app do Instagram, atalho no iPhone...)
     }
+    if (numero) {
+      carrinho = [];
+      salvarEAtualizar();
+      mostrarConfirmacao(numero);
+    } else {
+      mostrarToast('Abrimos o WhatsApp com seu pedido. É só tocar em enviar!');
+    }
   });
+
+  function mostrarConfirmacao(numero) {
+    const box = $('[data-confirmacao]');
+    $('[data-confirmacao-num]', box).textContent = numero;
+    box.hidden = false;
+    $('[data-cart-vazio]').hidden = true;
+  }
 
   // ── LOJA ABERTA / FECHADA ─────────────────────────
   const DIAS = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
@@ -410,6 +500,8 @@
   }
 
   function statusLoja() {
+    if (modoLoja.modo === 'aberto') return { aberto: true, texto: 'Aberto agora' };
+    if (modoLoja.modo === 'fechado') return { aberto: false, fechadoPeloPainel: true, texto: 'Fechado agora' };
     const { dia, hora } = agoraNaLoja();
     const abreHoje = LOJA.diasAbertos.includes(dia);
     // suporta fechar depois da meia-noite (ex.: abre 18, fecha 1)
@@ -441,7 +533,12 @@
     $('[data-status-texto]', el).textContent = s.texto;
     const aviso = $('[data-aviso-fechado]');
     aviso.hidden = s.aberto;
-    aviso.textContent = s.aberto ? '' : `Estamos fechados agora (${s.texto.replace('Fechado · ', '')}). Pode mandar o pedido que a gente responde assim que abrir.`;
+    const extra = modoLoja.aviso ? ` ${modoLoja.aviso}` : '';
+    aviso.textContent = s.fechadoPeloPainel
+      ? `A loja está fechada agora e não está recebendo pedidos.${extra}`
+      : s.aberto ? '' : `Estamos fechados agora (${s.texto.replace('Fechado · ', '')}). Pode mandar o pedido que a gente responde assim que abrir.${extra}`;
+    const avisoTopo = $('[data-aviso-loja]');
+    if (avisoTopo) { avisoTopo.textContent = modoLoja.aviso || ''; avisoTopo.hidden = !modoLoja.aviso; }
   }
 
   // ── MENU MOBILE ───────────────────────────────────
@@ -486,12 +583,72 @@
     els.forEach(el => obs.observe(el));
   }
 
+  // ── BANCO DE DADOS (cardápio e status vindos do painel) ──
+  async function getJSON(caminho) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 6000);
+    try {
+      const r = await fetch(`${SB.url}/rest/v1/${caminho}`, {
+        signal: ctrl.signal, headers: { apikey: SB.anonKey, Authorization: `Bearer ${SB.anonKey}` },
+      });
+      if (!r.ok) throw new Error(r.status);
+      return await r.json();
+    } finally { clearTimeout(t); }
+  }
+
+  const texto = (v, max) => (typeof v === 'string' ? v : '').slice(0, max);
+  function produtoDoBanco(p) {
+    return {
+      id: texto(p.id, 40), cat: texto(p.cat, 20), emoji: texto(p.emoji, 8) || '🍔',
+      nome: texto(p.nome, 60), desc: texto(p.descricao, 300), tag: texto(p.tag, 30),
+      preco: Number(p.preco) || 0, esgotado: Boolean(p.esgotado),
+      adicionais: (Array.isArray(p.adicionais) ? p.adicionais : [])
+        .map(a => ({ nome: texto(a && a.nome, 60), preco: Number(a && a.preco) || 0 })),
+      removiveis: (Array.isArray(p.removiveis) ? p.removiveis : []).map(x => texto(x, 60)),
+    };
+  }
+
+  async function carregarDoBanco() {
+    const [produtos, loja] = await Promise.all([
+      getJSON('produtos?select=*&ativo=eq.true&order=ordem.asc,nome.asc'),
+      getJSON('loja?select=modo,aviso&id=eq.1').catch(() => []),
+    ]);
+    if (!Array.isArray(produtos) || !produtos.length) throw new Error('cardápio vazio');
+    definirMenu(produtos.map(produtoDoBanco));
+    if (loja && loja[0]) modoLoja = { modo: loja[0].modo, aviso: texto(loja[0].aviso, 200) };
+  }
+
   // ── INÍCIO ────────────────────────────────────────
-  $$('[data-ano]').forEach(el => { el.textContent = new Date().getFullYear(); });
-  renderCardapio();
-  renderCarrinho();
-  atualizarTipo();
-  atualizarStatus();
-  setInterval(atualizarStatus, 60 * 1000);
-  observarReveal();
+  async function iniciar() {
+    $$('[data-ano]').forEach(el => { el.textContent = new Date().getFullYear(); });
+    atualizarTipo();
+    if (TEM_BANCO) {
+      try { await carregarDoBanco(); }
+      catch { definirMenu(window.CARDAPIO || []); } // banco fora do ar: usa o cardápio do arquivo
+    } else {
+      definirMenu(window.CARDAPIO || []);
+    }
+    $$('[data-carregando]').forEach(el => el.remove());
+    carrinho = carregarCarrinho();
+    renderCardapio();
+    renderCarrinho();
+    atualizarStatus();
+    setInterval(atualizarStatus, 60 * 1000);
+    if (TEM_BANCO) {
+      // pega mudanças do painel (esgotado, loja fechada) a cada 2 minutos
+      setInterval(async () => {
+        if (!drawer.hidden) return;
+        try {
+          const antes = JSON.stringify(MENU);
+          await carregarDoBanco();
+          if (JSON.stringify(MENU) !== antes) { // só redesenha se mudou algo no painel
+            renderCardapio(); carrinho = carregarCarrinho(); renderCarrinho(); observarReveal();
+          }
+          atualizarStatus();
+        } catch { /* tenta de novo depois */ }
+      }, 2 * 60 * 1000);
+    }
+    observarReveal();
+  }
+  iniciar();
 })();

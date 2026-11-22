@@ -312,3 +312,17 @@ button, input, select, textarea { font:inherit; color:inherit; }
   .nav-brand { display:none; }
   .sobre-stats { gap:1rem; }
 }
+
+/* CARDÁPIO VINDO DO BANCO */
+.cardapio-carregando { text-align:center; color:var(--texto-suave); font-style:italic; margin-bottom:2rem; }
+.card--esgotado { opacity:.72; box-shadow:none; }
+.card--esgotado:hover { transform:none; box-shadow:none; }
+.card--esgotado .card-preco { text-decoration:line-through; color:var(--texto-suave); }
+.card-tag--esgotado { background:var(--erro); }
+.card-esgotado-msg { margin-top:auto; padding:.8rem; text-align:center; font-weight:600; color:var(--erro); border:2px dashed var(--erro); border-radius:var(--raio); }
+.aviso-loja { background:var(--laranja-suave); border:2px solid var(--preto); border-radius:var(--raio); padding:.6rem 1rem; font-weight:600; margin-bottom:1rem; max-width:32rem; }
+.confirmacao { text-align:center; padding:1.5rem .5rem; display:flex; flex-direction:column; align-items:center; gap:1rem; color:var(--texto-suave); line-height:1.6; }
+.confirmacao-titulo { font-family:'Playfair Display',serif; font-weight:900; font-size:1.5rem; color:var(--preto); }
+.btn-enviar:disabled { opacity:.7; cursor:wait; }
+.btn-enviar.carregando::after { content:''; width:16px; height:16px; border:2px solid #fff; border-right-color:transparent; border-radius:50%; animation:gira .7s linear infinite; }
+@keyframes gira { to { transform:rotate(360deg); } }
