@@ -3,7 +3,8 @@
 
   const MENU = window.CARDAPIO || [];
   const LOJA = window.LOJA || {};
-  const POR_ID = Object.fromEntries(MENU.map(i => [i.id, i]));
+  const MAPA = new Map(MENU.map(i => [i.id, i]));
+  const POR_ID = Object.freeze(Object.assign(Object.create(null), Object.fromEntries(MAPA)));
   const CHAVE_CARRINHO = 'carne-e-pao:carrinho';
   const CHAVE_CLIENTE = 'carne-e-pao:cliente';
 
@@ -30,10 +31,10 @@
     const bruto = armazem.ler(CHAVE_CARRINHO, []);
     if (!Array.isArray(bruto)) return [];
     return bruto.filter(l => {
-      const item = l && POR_ID[l.id];
+      const item = l && typeof l.id === 'string' && MAPA.get(l.id);
       if (!item || !Number.isInteger(l.qtd) || l.qtd < 1) return false;
-      l.adds = (Array.isArray(l.adds) ? l.adds : []).filter(i => Number.isInteger(i) && item.adicionais[i]);
-      l.rems = (Array.isArray(l.rems) ? l.rems : []).filter(i => Number.isInteger(i) && item.removiveis[i] !== undefined);
+      l.adds = [...new Set((Array.isArray(l.adds) ? l.adds : []).filter(i => Number.isInteger(i) && i >= 0 && i < item.adicionais.length))];
+      l.rems = [...new Set((Array.isArray(l.rems) ? l.rems : []).filter(i => Number.isInteger(i) && i >= 0 && i < item.removiveis.length))];
       l.qtd = Math.min(l.qtd, 99);
       return true;
     });
@@ -225,7 +226,7 @@
     backdrop.hidden = true;
     document.body.classList.remove('sem-scroll');
     renderCarrinho();
-    if (focoAnterior && document.contains(focoAnterior) && focoAnterior.offsetParent !== null) focoAnterior.focus();
+    if (focoAnterior && document.contains(focoAnterior) && focoAnterior.getClientRects().length > 0) focoAnterior.focus();
   }
 
   $$('[data-abrir-carrinho]').forEach(b => b.addEventListener('click', abrirCarrinho));
@@ -364,9 +365,16 @@
     const dados = {};
     CAMPOS_LEMBRAR.forEach(n => { dados[n] = campo(n).value.trim(); });
     armazem.gravar(CHAVE_CLIENTE, dados);
-    const url = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(montarMensagem())}`;
-    window.open(url, '_blank', 'noopener');
-    mostrarToast('Abrimos o WhatsApp com seu pedido. É só tocar em enviar!');
+    // remove caracteres inválidos (ex.: emoji cortado ao colar) que quebrariam o link
+    const msg = montarMensagem().replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '');
+    const url = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(msg)}`;
+    const janela = window.open(url, '_blank');
+    if (janela) {
+      janela.opener = null;
+      mostrarToast('Abrimos o WhatsApp com seu pedido. É só tocar em enviar!');
+    } else {
+      location.href = url; // pop-up bloqueado (app do Instagram, atalho no iPhone...)
+    }
   });
 
   // ── LOJA ABERTA / FECHADA ─────────────────────────
@@ -386,7 +394,13 @@
   function statusLoja() {
     const { dia, hora } = agoraNaLoja();
     const abreHoje = LOJA.diasAbertos.includes(dia);
-    if (abreHoje && hora >= LOJA.abre && hora < LOJA.fecha) {
+    // suporta fechar depois da meia-noite (ex.: abre 18, fecha 1)
+    const viraNoite = LOJA.fecha <= LOJA.abre;
+    const ontemAberto = LOJA.diasAbertos.includes((dia + 6) % 7);
+    if (viraNoite && hora < LOJA.fecha && ontemAberto) {
+      return { aberto: true, texto: `Aberto agora · até ${LOJA.fecha}h` };
+    }
+    if (abreHoje && hora >= LOJA.abre && (viraNoite || hora < LOJA.fecha)) {
       return { aberto: true, texto: `Aberto agora · até ${LOJA.fecha}h` };
     }
     if (abreHoje && hora < LOJA.abre) return { aberto: false, texto: `Fechado · abre hoje às ${LOJA.abre}h` };
