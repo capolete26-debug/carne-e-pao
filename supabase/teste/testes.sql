@@ -126,6 +126,16 @@ update loja set modo = 'auto';
 set role anon;
 select pg_temp.espera_erro($$select criar_pedido('{"cliente":{"nome":"A","tipo":"retirada","pagamento":"Pix"},"itens":[{"id":"batata","qtd":1}]}')$$, 'produto_esgotado');
 select pg_temp.checa((select count(*) from produtos where id = 'coca') = 1, 'produto novo aparece pro cliente');
+select pg_temp.espera_erro('select * from pedidos_limite', 'permission denied');
+
+-- ── LIMITE DE PEDIDOS: 6 a cada 10 min do mesmo IP ──────────────────────────
+select set_config('request.headers', '{"x-forwarded-for": "200.1.2.3, 10.0.0.1"}', false);
+select criar_pedido('{"cliente":{"nome":"Spam","tipo":"retirada","pagamento":"Pix"},"itens":[{"id":"honesto","qtd":1}]}')
+from generate_series(1, 6);
+select pg_temp.espera_erro($$select criar_pedido('{"cliente":{"nome":"Spam","tipo":"retirada","pagamento":"Pix"},"itens":[{"id":"honesto","qtd":1}]}')$$, 'muitos_pedidos');
+-- outro cliente (outro IP) continua conseguindo
+select set_config('request.headers', '{"x-forwarded-for": "177.9.9.9"}', false);
+select pg_temp.checa((criar_pedido('{"cliente":{"nome":"Real","tipo":"retirada","pagamento":"Pix"},"itens":[{"id":"honesto","qtd":1}]}')->>'subtotal')::numeric = 24, 'outro IP passa');
 reset role;
 
 \echo 'TODOS OS TESTES PASSARAM'

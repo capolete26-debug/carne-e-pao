@@ -65,6 +65,14 @@ create table if not exists public.pedidos (
 create index if not exists pedidos_criado_em_idx on public.pedidos (criado_em desc);
 create index if not exists pedidos_status_idx on public.pedidos (status);
 
+-- Controle contra pedidos falsos em massa (ninguém acessa direto, só a função criar_pedido)
+create table if not exists public.pedidos_limite (
+  ip text not null,
+  em timestamptz not null default now()
+);
+create index if not exists pedidos_limite_idx on public.pedidos_limite (ip, em);
+alter table public.pedidos_limite enable row level security;
+
 -- ── FUNÇÕES DE APOIO ────────────────────────────────────────────────────────
 
 -- Papel de quem está logado: 'dono', 'funcionario' ou null
@@ -125,7 +133,7 @@ create policy pedidos_ver on public.pedidos for select to authenticated
   using (public.e_equipe());
 
 -- Permissões de tabela (o RLS acima filtra as linhas)
-revoke all on public.equipe, public.produtos, public.loja, public.pedidos from anon, authenticated;
+revoke all on public.equipe, public.produtos, public.loja, public.pedidos, public.pedidos_limite from anon, authenticated;
 grant select on public.produtos, public.loja to anon;
 grant select on public.equipe, public.produtos, public.loja, public.pedidos to authenticated;
 grant insert, delete on public.equipe to authenticated;
@@ -158,7 +166,26 @@ declare
   v_troco    numeric(10,2);
   v_id       bigint;
   v_modo     text;
+  v_ip       text;
+  v_headers  json;
 begin
+  -- Limite: no máximo 6 pedidos a cada 10 min do mesmo endereço de internet,
+  -- e 40 pedidos novos (não atendidos) a cada 10 min no total.
+  -- Se passar, o site manda o pedido só pelo WhatsApp, sem salvar no painel.
+  begin
+    v_headers := nullif(current_setting('request.headers', true), '')::json;
+  exception when others then v_headers := null;
+  end;
+  v_ip := coalesce(v_headers->>'cf-connecting-ip',
+                   nullif(btrim(split_part(coalesce(v_headers->>'x-forwarded-for', ''), ',', 1)), ''),
+                   'desconhecido');
+  if (select count(*) from public.pedidos_limite where ip = v_ip and em > now() - interval '10 minutes') >= 6
+     or (select count(*) from public.pedidos where status = 'recebido' and criado_em > now() - interval '10 minutes') >= 40 then
+    raise exception 'muitos_pedidos';
+  end if;
+  insert into public.pedidos_limite (ip) values (v_ip);
+  delete from public.pedidos_limite where em < now() - interval '1 day';
+
   select modo into v_modo from public.loja where id = 1;
   if v_modo = 'fechado' then
     raise exception 'loja_fechada' using hint = 'A loja está fechada agora.';
@@ -342,6 +369,11 @@ begin
      and not exists (select 1 from pg_publication_tables
                      where pubname = 'supabase_realtime' and tablename = 'pedidos') then
     alter publication supabase_realtime add table public.pedidos;
+  end if;
+  if exists (select 1 from pg_publication where pubname = 'supabase_realtime')
+     and not exists (select 1 from pg_publication_tables
+                     where pubname = 'supabase_realtime' and tablename = 'loja') then
+    alter publication supabase_realtime add table public.loja;
   end if;
 end $$;
 

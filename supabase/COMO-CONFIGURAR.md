@@ -40,6 +40,9 @@ Isso cria o cardápio (já com os lanches atuais), os pedidos, a equipe e as reg
 
 ## 4. Criar o seu login de dono
 
+> **Faça este passo antes do 5 e do 6.** Enquanto a chave do passo 5 não estiver publicada,
+> ninguém de fora consegue criar conta, então ninguém consegue "pegar" o seu e-mail antes de você.
+
 1. **Authentication** → **Users** → **Add user** → **Create new user**.
 2. Coloque **seu e-mail** e uma **senha** (mínimo 8 caracteres).
 3. Marque **Auto Confirm User** e clique em **Create user**.
@@ -88,6 +91,17 @@ Isso cria o cardápio (já com os lanches atuais), os pedidos, a equipe e as reg
 ---
 
 ## Dúvidas comuns
+
+**Alguém saiu da equipe.**
+Em **👥 Equipe**, clique em **Remover**. O acesso ao painel acaba na hora.
+Pra fazer uma faxina completa, apague também o login em **Authentication → Users** no Supabase.
+
+**Painel num tablet ou computador da loja.**
+O painel fica logado nesse aparelho. No fim do turno, use **⚙️ Conta → Sair** se outras pessoas usam o mesmo aparelho.
+
+**Recebi pedidos estranhos ou repetidos.**
+O banco aceita até 6 pedidos a cada 10 minutos da mesma internet e até 40 pedidos novos a cada 10 minutos no total.
+Passando disso, o pedido ainda chega pelo WhatsApp, mas não é salvo no painel. Cancele os falsos no painel.
 
 **O funcionário esqueceu a senha.**
 Em **👥 Equipe**, remova a pessoa e crie de novo com outro usuário. Ou você reseta pelo Supabase: **Authentication → Users**, clique na pessoa e defina uma nova senha.
