@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carne &amp; Pão — Smash Burger Artesanal em São Paulo</title>
-  <meta name="description" content="Smash burger artesanal em São Paulo. Carne fresca esmagada na chapa, queijo derretido e pão de verdade. Monte seu pedido e mande pelo WhatsApp — delivery ou retirada."/>
+  <title>Carne &amp; Pão — Smash Burger em Santo André</title>
+  <meta name="description" content="Smash burger artesanal na Vila Alpina, Santo André. Smash de 180g na chapa, pão brioche e muito sabor. Peça pra retirar, pelo iFood ou pelo 99Food."/>
   <meta name="theme-color" content="#FFFCF8"/>
   <link rel="icon" type="image/png" href="logo.png"/>
   <link rel="apple-touch-icon" href="logo.png"/>
@@ -12,13 +12,13 @@
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://capolete26-debug.github.io/carne-e-pao/"/>
   <meta property="og:locale" content="pt_BR"/>
-  <meta property="og:title" content="Carne &amp; Pão — Smash Burger Artesanal"/>
-  <meta property="og:description" content="Esmagado na chapa. Feito com respeito. Peça pelo WhatsApp."/>
-  <meta property="og:image" content="https://capolete26-debug.github.io/carne-e-pao/logo.png"/>
+  <meta property="og:title" content="Carne &amp; Pão — Smash Burger"/>
+  <meta property="og:description" content="Esmagado na chapa. Feito com respeito. Vila Alpina, Santo André."/>
+  <meta property="og:image" content="https://capolete26-debug.github.io/carne-e-pao/img/cardapio/crostinha.jpg"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css"/>
   <script>document.documentElement.classList.add('js');</script>
 
@@ -26,30 +26,29 @@
   {
     "@context": "https://schema.org",
     "@type": "Restaurant",
-    "name": "Carne & Pão",
+    "name": "Carne & Pão — Smash Burger",
     "url": "https://capolete26-debug.github.io/carne-e-pao/",
-    "image": "https://capolete26-debug.github.io/carne-e-pao/logo.png",
+    "image": "https://capolete26-debug.github.io/carne-e-pao/img/cardapio/crostinha.jpg",
     "servesCuisine": "Hambúrguer",
     "priceRange": "R$",
     "telephone": "+55-11-94060-9596",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Rua das Hamburguerias, 42",
-      "addressLocality": "São Paulo",
+      "streetAddress": "Rua Ester, 203",
+      "addressLocality": "Santo André",
       "addressRegion": "SP",
       "addressCountry": "BR"
     },
-    "openingHoursSpecification": [{
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-      "opens": "18:00",
-      "closes": "23:00"
-    }]
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "11:00", "closes": "15:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "18:00", "closes": "23:00" }
+    ],
+    "sameAs": ["https://www.instagram.com/carneepaoo/"]
   }
   </script>
 </head>
 <body>
-<a class="skip-link" href="#cardapio">Pular para o cardápio</a>
+<a class="skip-link" href="#pedir">Pular para onde pedir</a>
 
 <!-- NAV -->
 <header>
@@ -61,15 +60,11 @@
     <ul class="nav-links" id="nav-links">
       <li><a href="#sobre">Sobre</a></li>
       <li><a href="#cardapio">Cardápio</a></li>
-      <li><a href="#como-pedir">Como pedir</a></li>
-      <li><a href="#contato">Contato</a></li>
+      <li><a href="#pedir">Onde pedir</a></li>
+      <li><a href="#contato">Endereço</a></li>
     </ul>
     <div class="nav-right">
-      <button class="nav-cart" type="button" data-abrir-carrinho aria-label="Abrir pedido (0 itens)">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h-3v2h2l3.6 7.6-1.4 2.4c-.1.3-.2.6-.2.9 0 1.1.9 2.1 2 2.1h12v-2h-11.6c-.1 0-.2-.1-.2-.2v-.1l.9-1.7h7.5c.8 0 1.4-.4 1.7-1l3.6-6.5c.1-.2.1-.3.1-.5 0-.6-.4-1-1-1h-14.8l-.9-2zm3 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm9 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
-        <span class="nav-cart-count" data-cart-count>0</span>
-      </button>
-      <a class="nav-wpp" href="#cardapio">Pedir agora</a>
+      <a class="nav-wpp" href="#pedir">Pedir agora</a>
       <button class="nav-burger" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menu">
         <span></span><span></span><span></span>
       </button>
@@ -79,7 +74,7 @@
 
 <main>
 <!-- HERO -->
-<section id="hero">
+<section id="hero" data-falar="hero">
   <span class="mancha mancha--1" aria-hidden="true"></span>
   <span class="mancha mancha--2" aria-hidden="true"></span>
   <span class="mancha mancha--3" aria-hidden="true"></span>
@@ -92,32 +87,34 @@
         <span class="hero-title"><em>Pão</em></span>
       </h1>
       <p class="hero-sub">Esmagado na chapa. Feito com respeito.</p>
-      <p class="hero-servicos">Delivery<span aria-hidden="true">•</span>Salão<span aria-hidden="true">•</span>Retirada</p>
-      <p class="aviso-loja" data-aviso-loja hidden></p>
+      <p class="hero-servicos">Salão<span aria-hidden="true">•</span>Retirada<span aria-hidden="true">•</span>Delivery</p>
       <p class="status-loja" data-status hidden><span class="status-dot"></span><span data-status-texto></span></p>
       <div class="hero-btns">
-        <a class="btn-primary" href="#cardapio">Ver cardápio</a>
-        <a class="btn-ghost" href="#contato">Fale com a gente</a>
+        <a class="btn-primary" href="#pedir">Pedir agora</a>
+        <a class="btn-ghost" href="#cardapio">Ver cardápio</a>
       </div>
     </div>
     <div class="hero-mascote">
-      <img src="img/mascote.png" alt="Mascote da Carne e Pão: um hambúrguer de boné e tênis, deitado de lado" width="720" height="434"/>
+      <div class="balao balao--hero" data-balao-hero aria-hidden="true"><span data-balao-hero-texto>E aí! Bateu a fome? 🍔</span></div>
+      <button class="mascote-btn" type="button" data-mascote-hero aria-label="Mexer com o mascote">
+        <img class="mascote-img" src="img/mascote.png" alt="Mascote da Carne e Pão: um hambúrguer de boné e tênis, deitado de lado" width="720" height="434"/>
+      </button>
     </div>
   </div>
 </section>
 
 <!-- SOBRE -->
-<section id="sobre">
+<section id="sobre" data-falar="sobre">
   <span class="mancha mancha--2" aria-hidden="true"></span>
   <div class="reveal">
     <p class="sobre-label">Nossa história</p>
     <h2 class="sobre-titulo">Simples assim:<br><em>carne boa<br>e pão de verdade.</em></h2>
-    <p class="sobre-texto">O smash burger nasceu na chapa quente e no amor por sabor honesto. Aqui a gente não complica: carne fresca esmagada no ponto certo, queijo derretido do jeito que tem que ser, e pão que sustenta tudo sem pedir licença. Sem frescura. Só sabor.</p>
+    <p class="sobre-texto">O smash burger nasceu na chapa quente e no amor por sabor honesto. Aqui a gente não complica: smash de 180g esmagado no ponto que você pedir, cheddar derretido do jeito que tem que ser e pão brioche que sustenta tudo sem pedir licença. Sem frescura. Só sabor.</p>
   </div>
   <ul class="sobre-stats reveal">
-    <li class="stat"><span class="stat-num">100%</span><span class="stat-desc">Carne fresca</span></li>
-    <li class="stat"><span class="stat-num" aria-hidden="true">🔥</span><span class="stat-desc">Chapa na brasa</span></li>
-    <li class="stat"><span class="stat-num">0</span><span class="stat-desc">Congelados</span></li>
+    <li class="stat"><span class="stat-num">180g</span><span class="stat-desc">Smash na chapa</span></li>
+    <li class="stat"><span class="stat-num" aria-hidden="true">🔥</span><span class="stat-desc">No ponto que você pedir</span></li>
+    <li class="stat"><span class="stat-num">0</span><span class="stat-desc">Frescura</span></li>
     <li class="stat"><span class="stat-num" aria-hidden="true">∞</span><span class="stat-desc">Sabor garantido</span></li>
   </ul>
 </section>
@@ -125,90 +122,90 @@
 <!-- FAIXA -->
 <div class="faixa" aria-hidden="true">
   <div class="faixa-inner">
-    <span class="faixa-item">Smash Burger ✦</span><span class="faixa-item">Carne Fresca ✦</span><span class="faixa-item">Chapa Quente ✦</span><span class="faixa-item">Feito na Hora ✦</span><span class="faixa-item">Carne e Pão ✦</span>
-    <span class="faixa-item">Smash Burger ✦</span><span class="faixa-item">Carne Fresca ✦</span><span class="faixa-item">Chapa Quente ✦</span><span class="faixa-item">Feito na Hora ✦</span><span class="faixa-item">Carne e Pão ✦</span>
+    <span class="faixa-item">Smash Burger ✦</span><span class="faixa-item">Pão Brioche ✦</span><span class="faixa-item">Chapa Quente ✦</span><span class="faixa-item">Feito na Hora ✦</span><span class="faixa-item">Carne e Pão ✦</span>
+    <span class="faixa-item">Smash Burger ✦</span><span class="faixa-item">Pão Brioche ✦</span><span class="faixa-item">Chapa Quente ✦</span><span class="faixa-item">Feito na Hora ✦</span><span class="faixa-item">Carne e Pão ✦</span>
   </div>
 </div>
 
 <!-- CARDÁPIO -->
-<section id="cardapio" tabindex="-1">
+<section id="cardapio" data-falar="cardapio">
   <span class="mancha mancha--1" aria-hidden="true"></span>
   <span class="mancha mancha--3" aria-hidden="true"></span>
   <span class="mancha mancha--2" aria-hidden="true"></span>
   <div class="section-header">
-    <p class="section-label">O que a gente faz</p>
+    <p class="section-label">O que sai da chapa</p>
     <h2 class="section-titulo">O <em>Cardápio</em></h2>
-    <p class="section-sub">Escolha, personalize e adicione ao pedido. No final, a gente manda tudo pronto pro WhatsApp.</p>
+    <p class="section-sub">Escolheu? Toque em <strong>Quero esse!</strong> e peça pra retirar, pelo iFood ou pelo 99Food.</p>
   </div>
-  <div class="cardapio-grupo">
-    <p class="cardapio-carregando" data-carregando>Carregando cardápio…</p>
-    <h3 class="grupo-titulo">Burgers</h3>
-    <div class="cardapio-grid" data-grid="burger"></div>
-  </div>
-  <div class="cardapio-grupo">
-    <h3 class="grupo-titulo">Acompanhamentos</h3>
-    <div class="cardapio-grid" data-grid="acomp"></div>
-  </div>
-  <div class="cardapio-grupo" hidden>
-    <h3 class="grupo-titulo">Bebidas</h3>
-    <div class="cardapio-grid" data-grid="bebida"></div>
-  </div>
-  <div class="cardapio-grupo" hidden>
-    <h3 class="grupo-titulo">Sobremesas</h3>
-    <div class="cardapio-grid" data-grid="sobremesa"></div>
-  </div>
-  <noscript><p class="noscript">Ative o JavaScript para ver o cardápio, ou peça direto pelo <a href="https://wa.me/5511940609596">WhatsApp</a>.</p></noscript>
+  <nav class="cat-nav" aria-label="Categorias do cardápio" data-cat-nav></nav>
+  <div data-cardapio></div>
+  <noscript><p class="noscript">Ative o JavaScript para ver o cardápio, ou veja direto na <a href="https://carneepao.saipos.com/home">nossa loja online</a>.</p></noscript>
 </section>
 
-<!-- COMO PEDIR -->
-<section id="como-pedir">
+<!-- ONDE PEDIR -->
+<section id="pedir" data-falar="pedir" tabindex="-1">
   <span class="mancha mancha--3" aria-hidden="true"></span>
-  <div class="section-header">
-    <p class="section-label">Sem complicação</p>
-    <h2 class="section-titulo section-titulo--escuro">Como <em>pedir</em></h2>
+  <span class="mancha mancha--1" aria-hidden="true"></span>
+  <div class="pedir-grid">
+    <div class="pedir-mascote">
+      <div class="balao balao--pedir" aria-hidden="true"><span data-balao-pedir-texto>Escolhe aí que eu já vou pra chapa! 🔥</span></div>
+      <img class="mascote-img" src="img/mascote.png" alt="" width="720" height="434" loading="lazy"/>
+    </div>
+    <div class="pedir-conteudo">
+      <p class="section-label">Bateu a fome?</p>
+      <h2 class="section-titulo section-titulo--escuro">Peça <em>agora</em></h2>
+      <p class="pedir-sub" data-pedir-escolha>Escolha onde pedir. Todos os pedidos chegam direto na nossa chapa.</p>
+      <ul class="plataformas">
+        <li>
+          <a class="plataforma plataforma--retirada" href="https://carneepao.saipos.com/home" target="_blank" rel="noopener" data-link="retirada" data-plataforma="retirada">
+            <span class="plataforma-logo plataforma-logo--casa"><img src="logo.png" alt="" width="56" height="56"/></span>
+            <span class="plataforma-txt"><strong>Retirar na loja</strong><small>Peça online e busque em ~15 min. Pix ou cartão.</small></span>
+            <span class="plataforma-seta" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li>
+          <a class="plataforma plataforma--ifood" href="https://www.ifood.com.br/delivery/santo-andre-sp/carne-e-pao---smash-burger-vila-alpina/27f9098f-7891-442e-9c80-060679ef1cc4" target="_blank" rel="noopener" data-link="ifood" data-plataforma="ifood">
+            <span class="plataforma-logo plataforma-logo--ifood" aria-hidden="true">iFood</span>
+            <span class="plataforma-txt"><strong>Delivery pelo iFood</strong><small>Receba em casa. Abre no app ou no site do iFood.</small></span>
+            <span class="plataforma-seta" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li>
+          <a class="plataforma plataforma--99" href="https://oia.99app.com/dlp9/2ThwnV" target="_blank" rel="noopener" data-link="noventaenove" data-plataforma="99">
+            <span class="plataforma-logo plataforma-logo--99" aria-hidden="true">99<small>Food</small></span>
+            <span class="plataforma-txt"><strong>Delivery pelo 99Food</strong><small>Receba em casa. Abre no app 99.</small></span>
+            <span class="plataforma-seta" aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+      <p class="pedir-nota">Prefere comer aqui? O <strong>salão</strong> está aberto nos mesmos horários. <a href="#contato">Ver endereço</a></p>
+    </div>
   </div>
-  <ol class="passos">
-    <li class="passo reveal">
-      <span class="passo-num">1</span>
-      <h3 class="passo-titulo">Monte seu lanche</h3>
-      <p class="passo-texto">Escolha no cardápio, coloque adicionais ou tire o que não curte.</p>
-    </li>
-    <li class="passo reveal">
-      <span class="passo-num">2</span>
-      <h3 class="passo-titulo">Revise o pedido</h3>
-      <p class="passo-texto">Informe se é delivery ou retirada, endereço e forma de pagamento.</p>
-    </li>
-    <li class="passo reveal">
-      <span class="passo-num">3</span>
-      <h3 class="passo-titulo">Envie no WhatsApp</h3>
-      <p class="passo-texto">A mensagem já vai pronta. A gente confirma e manda pra chapa.</p>
-    </li>
-  </ol>
 </section>
 
 <!-- CONTATO -->
-<section id="contato">
+<section id="contato" data-falar="contato">
   <span class="mancha mancha--1" aria-hidden="true"></span>
   <div class="reveal">
     <p class="section-label section-label--claro">Onde a gente tá</p>
-    <h2 class="contato-titulo">Vem comer<br>ou <em>pede pelo zap</em></h2>
+    <h2 class="contato-titulo">Vem comer<br><em>na Vila Alpina</em></h2>
     <div class="info-item">
       <div class="info-icon" aria-hidden="true">📍</div>
-      <div><p class="info-label">Endereço</p><p class="info-valor">Rua das Hamburguerias, 42<br>São Paulo — SP</p></div>
+      <div><p class="info-label">Endereço</p><p class="info-valor">Rua Ester, 203 — Vila Alpina<br>Santo André — SP<br><a href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Ester+203+Vila+Alpina+Santo+Andr%C3%A9+SP" target="_blank" rel="noopener">Como chegar ↗</a></p></div>
     </div>
     <div class="info-item">
       <div class="info-icon" aria-hidden="true">🕐</div>
-      <div><p class="info-label">Horário</p><p class="info-valor">Terça a domingo<br>18h às 23h</p></div>
+      <div><p class="info-label">Horário</p><p class="info-valor">Quarta a domingo<br>11h às 15h · 18h às 23h</p></div>
     </div>
     <div class="info-item">
-      <div class="info-icon" aria-hidden="true">📞</div>
-      <div><p class="info-label">WhatsApp</p><p class="info-valor"><a href="https://wa.me/5511940609596" target="_blank" rel="noopener">(11) 94060-9596</a></p></div>
+      <div class="info-icon" aria-hidden="true">📸</div>
+      <div><p class="info-label">Instagram</p><p class="info-valor"><a href="https://www.instagram.com/carneepaoo/" target="_blank" rel="noopener">@carneepaoo</a></p></div>
     </div>
   </div>
   <div class="wpp-card reveal">
     <img class="wpp-mascote" src="img/mascote.png" alt="" width="720" height="434" loading="lazy"/>
-    <p class="wpp-titulo">Bate um papo<br><em>ou manda o pedido</em></p>
-    <p class="wpp-desc">Prefere pedir direto? Manda uma mensagem no WhatsApp que a gente responde rapidinho.</p>
+    <p class="wpp-titulo">Dúvida, encomenda<br><em>ou evento?</em></p>
+    <p class="wpp-desc">Chama a gente no WhatsApp que a gente responde rapidinho.</p>
     <a class="btn-wpp" href="https://wa.me/5511940609596" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wpp"/></svg>
       Chamar no WhatsApp
@@ -223,140 +220,30 @@
     <img class="footer-logo-img" src="logo.png" alt="" width="38" height="38"/>
     <span class="footer-logo-text">Carne <span>&amp; Pão</span></span>
   </div>
-  <p class="footer-copy">© <span data-ano>2025</span> Carne &amp; Pão · Smash Burger Artesanal · São Paulo</p>
+  <p class="footer-copy">© <span data-ano>2026</span> Carne &amp; Pão · Smash Burger · Vila Alpina, Santo André</p>
 </footer>
 
-<!-- BOTÃO FLUTUANTE DO PEDIDO -->
-<button class="cart-float" type="button" data-abrir-carrinho data-cart-float hidden>
-  <span class="cart-float-qtd" data-cart-count>0</span>
-  <span class="cart-float-label">Ver pedido</span>
-  <span class="cart-float-total" data-cart-total>R$ 0,00</span>
-</button>
-
-<!-- CARRINHO -->
-<div class="drawer-backdrop" data-fechar-carrinho hidden></div>
-<aside class="drawer" id="carrinho" role="dialog" aria-modal="true" aria-labelledby="carrinho-titulo" hidden>
-  <div class="drawer-head">
-    <h2 class="drawer-titulo" id="carrinho-titulo">Seu pedido</h2>
-    <button class="drawer-fechar" type="button" data-fechar-carrinho aria-label="Fechar pedido">✕</button>
-  </div>
-
-  <div class="drawer-body">
-    <div class="cart-vazio" data-cart-vazio>
-      <img class="cart-vazio-mascote" src="img/mascote.png" alt="" width="720" height="434" loading="lazy"/>
-      <p>Seu pedido está vazio.</p>
-      <button class="btn-primary" type="button" data-fechar-carrinho data-ir-cardapio>Ver cardápio</button>
+<!-- MASCOTE AMIGO (acompanha o cliente pela página) -->
+<div class="amigo" data-amigo hidden>
+  <div class="amigo-balao" data-amigo-balao role="status" aria-live="polite">
+    <button class="amigo-fechar" type="button" data-amigo-fechar aria-label="Dispensar o mascote">✕</button>
+    <p data-amigo-texto></p>
+    <div class="amigo-acoes" data-amigo-acoes hidden>
+      <a href="https://carneepao.saipos.com/home" target="_blank" rel="noopener" data-link="retirada">🏃 Retirar</a>
+      <a href="https://www.ifood.com.br/delivery/santo-andre-sp/carne-e-pao---smash-burger-vila-alpina/27f9098f-7891-442e-9c80-060679ef1cc4" target="_blank" rel="noopener" data-link="ifood">iFood</a>
+      <a href="https://oia.99app.com/dlp9/2ThwnV" target="_blank" rel="noopener" data-link="noventaenove">99Food</a>
     </div>
-
-    <div class="confirmacao" data-confirmacao hidden role="status">
-      <img class="cart-vazio-mascote" src="img/mascote.png" alt="" width="720" height="434" loading="lazy"/>
-      <p class="confirmacao-titulo">Pedido nº <span data-confirmacao-num></span> recebido!</p>
-      <p>Abrimos o WhatsApp com a mensagem pronta. <strong>Toca em enviar</strong> por lá pra gente confirmar.</p>
-      <button class="btn-primary" type="button" data-fechar-carrinho>Fechar</button>
-    </div>
-
-    <ul class="cart-lista" data-cart-lista></ul>
-
-    <form class="pedido-form" id="pedido-form" novalidate data-pedido-form hidden>
-      <div class="cart-subtotal">
-        <span>Subtotal</span><strong data-cart-subtotal>R$ 0,00</strong>
-      </div>
-      <p class="cart-nota" data-nota-taxa>Taxa de entrega é combinada no WhatsApp, conforme o bairro.</p>
-      <p class="cart-aviso" data-aviso-fechado hidden></p>
-
-      <fieldset class="campo-grupo">
-        <legend class="campo-legend">Como você quer receber?</legend>
-        <div class="entrega-opcoes">
-          <label class="entrega-opt">
-            <input type="radio" name="tipo" value="delivery" checked>
-            <span><span aria-hidden="true">🛵</span> Delivery</span>
-          </label>
-          <label class="entrega-opt">
-            <input type="radio" name="tipo" value="retirada">
-            <span><span aria-hidden="true">🏃</span> Retirada</span>
-          </label>
-        </div>
-      </fieldset>
-
-      <div class="campo">
-        <label for="f-nome">Seu nome</label>
-        <input id="f-nome" name="nome" type="text" autocomplete="name" required>
-        <p class="campo-erro" id="f-nome-erro"></p>
-      </div>
-
-      <div data-campos-delivery>
-        <div class="campo">
-          <label for="f-cep">CEP <span class="opcional">(preenche o endereço)</span></label>
-          <input id="f-cep" name="cep" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9">
-          <p class="campo-info" id="f-cep-info" aria-live="polite"></p>
-        </div>
-        <div class="campo">
-          <label for="f-rua">Rua / Avenida</label>
-          <input id="f-rua" name="rua" type="text" autocomplete="address-line1" required>
-          <p class="campo-erro" id="f-rua-erro"></p>
-        </div>
-        <div class="campo-linha">
-          <div class="campo">
-            <label for="f-num">Número</label>
-            <input id="f-num" name="num" type="text" inputmode="numeric" required>
-            <p class="campo-erro" id="f-num-erro"></p>
-          </div>
-          <div class="campo">
-            <label for="f-comp">Complemento <span class="opcional">(opcional)</span></label>
-            <input id="f-comp" name="comp" type="text" autocomplete="address-line2" placeholder="Apto, bloco...">
-          </div>
-        </div>
-        <div class="campo">
-          <label for="f-bairro">Bairro</label>
-          <input id="f-bairro" name="bairro" type="text" required>
-          <p class="campo-erro" id="f-bairro-erro"></p>
-        </div>
-      </div>
-
-      <div class="retirada-info" data-info-retirada hidden>
-        <span aria-hidden="true">📍</span> <strong>Retirada no local:</strong><br>
-        Rua das Hamburguerias, 42 — São Paulo, SP<br>
-        Terça a domingo, 18h às 23h
-      </div>
-
-      <div class="campo">
-        <label for="f-pagto">Forma de pagamento</label>
-        <select id="f-pagto" name="pagto">
-          <option value="Pix">Pix</option>
-          <option value="Cartão (crédito/débito)">Cartão (crédito/débito)</option>
-          <option value="Dinheiro">Dinheiro</option>
-        </select>
-      </div>
-      <div class="campo" data-campo-troco hidden>
-        <label for="f-troco">Troco para quanto? <span class="opcional">(opcional)</span></label>
-        <input id="f-troco" name="troco" type="text" inputmode="decimal" placeholder="Ex.: 100" aria-describedby="f-troco-erro">
-        <p class="campo-erro" id="f-troco-erro"></p>
-      </div>
-
-      <div class="campo">
-        <label for="f-obs">Observações <span class="opcional">(opcional)</span></label>
-        <textarea id="f-obs" name="obs" rows="2" placeholder="Ponto de referência, ponto da carne..."></textarea>
-      </div>
-    </form>
   </div>
-
-  <div class="drawer-foot" data-drawer-foot hidden>
-    <button class="btn-enviar" type="submit" form="pedido-form">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wpp"/></svg>
-      Enviar pedido · <span data-cart-total>R$ 0,00</span>
-    </button>
-    <button class="btn-esvaziar" type="button" data-esvaziar>Esvaziar pedido</button>
-  </div>
-</aside>
-
-<div class="toast" role="status" aria-live="polite" data-toast></div>
+  <button class="amigo-btn" type="button" data-amigo-btn aria-label="Falar com o mascote">
+    <img src="img/mascote.png" alt="" width="720" height="434"/>
+  </button>
+</div>
 
 <!-- ÍCONES -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="icon-wpp" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></symbol>
 </svg>
 
-<script src="js/config.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/app.js"></script>
 </body>
